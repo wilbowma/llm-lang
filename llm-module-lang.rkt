@@ -8,6 +8,7 @@
 
 (provide 
  prompt!
+ current-response-timeout
  (rename-out
   [new-module-begin #%module-begin]
   [new-top-interaction #%top-interaction])

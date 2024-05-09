@@ -12,7 +12,7 @@
    (post "http://localhost:11434/api/generate"
     #:json
     (hash 'model "phi3" 'prompt prompt 'stream #f)
-    #:timeouts (make-timeout-config #:request 120)))
+    #:timeouts (make-timeout-config #:request (current-response-timeout))))
   (hash-ref (response-json rsp) 'response))
 
 (current-send-prompt! phi3-send-prompt!)

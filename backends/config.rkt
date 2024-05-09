@@ -1,5 +1,7 @@
 #lang racket/base
 
+(require racket/contract)
+
 (provide (all-defined-out))
 
 (define current-prompt-port (make-parameter (open-output-string)))
@@ -8,4 +10,5 @@
  (make-parameter
   (lambda (e) (error "Unconfigured backend prompt sender; please require a backend"))))
 
-
+(define current-response-timeout
+ (make-parameter 120 (lambda (e) (and (natural-number/c e) e))))
