@@ -31,4 +31,5 @@
   (syntax-parse stx
     [(_ e ...)
      #`(#%module-begin
-         (wrap e) ...)]))
+         (wrap e) ...
+         (prompt!))]))
