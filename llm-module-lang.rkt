@@ -40,9 +40,9 @@
     [(_ e ...)
      #`(#%module-begin
          (wrap e) ...
-         (prompt!))]))
+         (displayln (prompt!)))]))
 
 (define-syntax (new-top-interaction stx)
   (syntax-parse stx
     [(_ . e)
-     #`(begin (wrap-f e) (prompt!))]))
+     #`(begin (wrap-f e) (displayln (prompt!)))]))
