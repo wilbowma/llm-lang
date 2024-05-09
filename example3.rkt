@@ -1,6 +1,6 @@
 #lang llm-lang
 
-@(require llm-lang/backends/gpt3-5.rkt racket/port)
+@(require llm-lang/backends/gpt3-5 racket/port)
 
 (OPENAI_API_KEY "xxxx-xxxx-xxxxx")
 
