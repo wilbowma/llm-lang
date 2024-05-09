@@ -8,8 +8,13 @@
 
 (provide 
  prompt!
- (rename-out [new-module-begin #%module-begin])
- (except-out (all-from-out racket/base) #%module-begin))
+ (rename-out
+  [new-module-begin #%module-begin]
+  [new-top-interaction #%top-interaction])
+ (except-out
+  (all-from-out racket/base)
+  #%module-begin
+  #%top-interaction))
 
 (define (wrap-f e)
  (match e
@@ -35,3 +40,8 @@
      #`(#%module-begin
          (wrap e) ...
          (prompt!))]))
+
+(define-syntax (new-top-interaction stx)
+  (syntax-parse stx
+    [(_ . e)
+     #`(begin (wrap-f e) (prompt!))]))
