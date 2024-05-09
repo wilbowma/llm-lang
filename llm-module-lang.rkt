@@ -18,7 +18,9 @@
   [_ (void (fprintf (current-prompt-port) "~a" e))]))
 
 (define (prompt!)
-  ((current-send-prompt!) (get-output-string (current-prompt-port))))
+ (define prompt (bytes->string/utf-8 (get-output-bytes (current-prompt-port) #t) #\uFFFD))
+ (unless (equal? "" prompt)
+   ((current-send-prompt!) prompt)))
 
 (define-syntax (wrap stx)
   (syntax-parse stx
