@@ -2,7 +2,7 @@ llm-lang
 ========
 A language for interacting with LLMs. Inspired by GenAIScript (https://github.com/microsoft/genaiscript).
 
-Install with `raco pkg install llm-lang`.
+Install with `raco pkg install llm-lang` or `raco pkg install https://github.com/wilbowma/llm-lang.git#main`.
 
 This llm-lang is LLM-first: by default, you're writing a prompt to send to a LLM.
 When you want to perform normal computation, you escape into the Racket programming language.
