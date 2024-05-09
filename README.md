@@ -2,7 +2,7 @@ llm-lang
 ========
 A language for interacting with LLMs. Inspired by GenAIScript (https://github.com/microsoft/genaiscript).
 
-See [demo.webm](demo.webm) for a usage demo video.
+See ![](demo.mp4) for a usage demo video.
 
 Install with `raco pkg install llm-lang` or `raco pkg install https://github.com/wilbowma/llm-lang.git#main`.
 
