@@ -20,6 +20,11 @@ All top-level values are collected into a prompt and sent at the next call to `p
 There is an implicit call to `prompt!` at the end of every module.
 
 To run an llm-lang program, simply run it as a Racket program: `racket -t example1.rkt`, for example.
+This will print some variation on the following:
+> "Yes, I'm functioning properly. How can I assist you further? Whether it's answering questions or helping with tasks, I'm here to help!"
+
+An explicit call to `prompt!` will let you capture the response and perform further computation.
+See `example2.rkt` for a slightly more complex example.
 
 This LLM-first approach to prompts is the main difference in design between this and GenAIScript, although llm-lang is extremely feature-poor as I wrote it in an afternoon.
 
