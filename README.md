@@ -28,3 +28,7 @@ Read `backends/config.rkt` and `backends/ollama-phi3.rkt` to figure out how to w
 
 I haven't thought about getting back more than text output, or configuring initial prompts, or streaming, or AICI, or pretty much anything.
 I probably won't make much more progress on this without a collaborator or a fit of inspiration.
+
+## Ideas:
+- Add implicit `prompt!`s, probably at the end of a module?
+- Add implicit print of state of reply port?
