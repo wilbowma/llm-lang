@@ -30,8 +30,8 @@ See `example2.rkt` for a slightly more complex example.
 
 This LLM-first approach to prompts is the main difference in design between this and GenAIScript, although llm-lang is extremely feature-poor as I wrote it in an afternoon.
 
-The language is designed to support multiple backends, but only currently implements Phi-3 via Ollama (https://ollama.com) and GPT 3.5 (which is untested as I can't get an API key).
-These backends are configuring by requiring a file that sets the right configuring variables.
+The language is designed to support multiple backends, but only currently implements Phi-3 via Ollama (https://ollama.com) and GPT 3.5 Turbo (https://platform.openai.com/docs/models/gpt-3-5-turbo).
+These backends are configured by setting certain configuration variables, usually by requiring a file as in the above example.
 Read `backends/config.rkt` and `backends/ollama-phi3.rkt` to figure out how to write new backends; it's not complicated, because the system doesn't support much yet.
 
 I haven't thought about getting back more than text output, or configuring initial prompts, or streaming, or AICI, or pretty much anything.
