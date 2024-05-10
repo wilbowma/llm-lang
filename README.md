@@ -7,7 +7,8 @@ See [demo.mp4](demo.mp4) for a usage demo video.
 Install with `raco pkg install llm-lang` or `raco pkg install https://github.com/wilbowma/llm-lang.git#main`.
 
 This llm-lang is LLM-first: by default, you're writing a prompt to send to a LLM.
-When you want to perform normal computation, you escape into the Racket programming language.
+llm-lang uses the at expression reader [](https://docs.racket-lang.org/scribble/reader.html#(part._.The_.Scribble_.Syntax_at_a_.Glance)), so you can escape from your prompt using `@` forms to compute part of the prompt.
+When you want to perform normal computation, you escape into the Racket programming language using `@` forms.
 For example, the following example asks the LLM "Are you working correctly?" and prints the reply.
 
 ```
@@ -18,7 +19,9 @@ For example, the following example asks the LLM "Are you working correctly?" and
 Are you working correctly?
 ```
 
-All top-level values are collected into a prompt and sent at the next call to `prompt!`, which returns the response from the LLM.
+The return value of any top-level expression is added to the prompt, except the values `""`, `(void)`, and `"\n"`.
+Non-expressions, such as definitions, and statements do not add values to the prompt.
+The current prompt is sent sent at the next call to `prompt!`, which returns the response from the LLM.
 There is an implicit call to `prompt!` at the end of every module.
 
 To run an llm-lang program, simply run it as a Racket program: `racket -t example1.rkt`, for example.
