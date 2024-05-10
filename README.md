@@ -47,7 +47,7 @@ This LLM-first approach to prompts is the main difference in design between this
 
 The language is designed to support multiple backends, but only currently implements Phi-3 via Ollama (https://ollama.com) and GPT 3.5 Turbo (https://platform.openai.com/docs/models/gpt-3-5-turbo).
 These backends are configured by setting certain configuration variables, usually by requiring a file as in the above example.
-Read [](backends/config.rkt) and [](backends/ollama-phi3.rkt) to figure out how to write new backends; it's not complicated, because the system doesn't support much yet.
+Read [config.rkt](backends/config.rkt) and [ollama-phi3.rkt](backends/ollama-phi3.rkt) to figure out how to write new backends; it's not complicated, because the system doesn't support much yet.
 
 I haven't thought about getting back more than text output, or configuring initial prompts, or streaming, or AICI, or pretty much anything.
 I probably won't make much more progress on this without a collaborator or a fit of inspiration.
