@@ -41,7 +41,7 @@ The current prompt is sent sent at the next call to `prompt!`, which returns the
 There is an implicit call to `prompt!` at the end of every module.
 
 An explicit call to `prompt!` will let you capture the response and perform further computation.
-See `example2.rkt` for a slightly more complex example.
+See [example2.rkt](example2.rkt) for a slightly more complex example.
 
 This LLM-first approach to prompts is the main difference in design between this and GenAIScript, although llm-lang is extremely feature-poor as I wrote it in an afternoon.
 
