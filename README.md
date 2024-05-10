@@ -9,7 +9,7 @@ Install with `raco pkg install llm-lang` or `raco pkg install https://github.com
 This llm-lang is LLM-first: by default, you're writing a prompt to send to a LLM.
 llm-lang uses the at expression reader [](https://docs.racket-lang.org/scribble/reader.html#(part._.The_.Scribble_.Syntax_at_a_.Glance)), so you can escape from your prompt using `@` forms to compute part of the prompt.
 When you want to perform normal computation, you escape into the Racket programming language using `@` forms.
-For example, the following example asks the LLM "Are you working correctly?" and prints the reply.
+For example, the following configure an LLM backend and ask "Are you working correctly?", `display`ing the reply.
 
 ```
 #lang llm-lang
@@ -19,14 +19,24 @@ For example, the following example asks the LLM "Are you working correctly?" and
 Are you working correctly?
 ```
 
+```
+#lang llm-lang
+
+@(require llm-lang/backends/gpt3-5)
+
+@(OPENAI_API_KEY "xxxx-xxxx-xxxxxxxx")
+
+Are you working correctly?
+```
+
+To run an llm-lang program, simply run it as a Racket program: `racket -t example1.rkt`, for example.
+The above examples will display some variation on the following:
+> Yes, I'm functioning properly. How can I assist you further? Whether it's answering questions or helping with tasks, I'm here to help!
+
 The return value of any top-level expression is added to the prompt, except the values `""`, `(void)`, and `"\n"`.
 Non-expressions, such as definitions, and statements do not add values to the prompt.
 The current prompt is sent sent at the next call to `prompt!`, which returns the response from the LLM.
 There is an implicit call to `prompt!` at the end of every module.
-
-To run an llm-lang program, simply run it as a Racket program: `racket -t example1.rkt`, for example.
-This will print some variation on the following:
-> "Yes, I'm functioning properly. How can I assist you further? Whether it's answering questions or helping with tasks, I'm here to help!"
 
 An explicit call to `prompt!` will let you capture the response and perform further computation.
 See `example2.rkt` for a slightly more complex example.
