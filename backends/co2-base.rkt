@@ -40,6 +40,6 @@
     co2-emitter co2-emission))
    (format "This query cost ~a KWh, with training cost of ~a KWh~n"
     kwh-query kwh-training)
-   (format "For reference, this query could power an average American house for ~a years (and ~a for the training costs)~n"
+   (format "For reference, this query could power an average American house for ~a years (and ~a years for the training costs)~n"
     (/ kwh-query AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE)
     (/ kwh-training AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE))))
