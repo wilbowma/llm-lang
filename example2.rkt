@@ -1,6 +1,6 @@
 #lang llm-lang
 
-@(require llm-lang/backends/ollama-phi3 racket/port)
+@(require llm-lang/backends/ollama/phi3 racket/port)
 
 I am a scientist interested in consturctive, critical feedback. I value precision, brevity, and falsifiability.
 
