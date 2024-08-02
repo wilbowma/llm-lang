@@ -1,6 +1,6 @@
 #lang llm-lang
 
-@(require llm-lang/backends/ollama-phi3)
+@(require llm-lang/backends/ollama/phi3)
 
 @(current-response-timeout 300)
 

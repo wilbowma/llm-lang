@@ -3,8 +3,8 @@
 (require 
  net/http-easy
  racket/port
- "config.rkt"
- "co2-base.rkt")
+ "../config.rkt"
+ "../co2-base.rkt")
 
 ; https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
 
