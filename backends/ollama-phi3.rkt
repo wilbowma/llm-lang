@@ -16,6 +16,7 @@
  (* 1000 6.776570658581774))
 
 ; guesses based on similar models; using llama 2 7B
+; Validation data: benchmarks suggest my iMac 27" 2017 3.5 i5 16 GB is drawing 1KW, which suggest the model is closer to 2x reality.
 (define phi3-model-params (model-energy-params (/ -3.89 2) (/ 31.52 2) (/ (* 4.27 (exp -2)) 2)))
 
 ; https://ourworldindata.org/grapher/carbon-intensity-electricity
