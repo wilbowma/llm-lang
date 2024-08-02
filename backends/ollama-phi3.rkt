@@ -27,9 +27,10 @@
     #:json
     (hash 'model "phi3" 'prompt prompt 'stream #f)
     #:timeouts (make-timeout-config #:request (current-response-timeout))))
-  (define response (hash-ref (response-json rsp) 'response))
+  (define response-hash (response-json rsp))
+  (define response (hash-ref response-hash 'response))
   (displayln
-   (model-cost-info->string (model-cost-info tco2/kwh phi3-model-params (string-length prompt) (string-length response) phi3-training-tco2 phi3-training-kwh))
+   (model-cost-info->string (model-cost-info tco2/kwh phi3-model-params (hash-ref response-hash 'prompt_eval_count) (hash-ref response-hash 'eval_count) phi3-training-tco2 phi3-training-kwh))
    (current-cost-port))
   response)
 
