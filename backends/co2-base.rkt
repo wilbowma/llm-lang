@@ -11,7 +11,8 @@
  (struct-out wilkins-inference-model)
  (struct-out time-avg-inference-model)
  (struct-out cost-log-entry)
- current-cost-port)
+ current-cost-port
+ current-system-kw)
 
 (struct inference-cost-info (input-tokens output-tokens prompt-duration response-duration))
 
@@ -28,7 +29,10 @@
       (inference-cost-info input-tokens output-tokens _1 _2))
      (* JOULES/KWH (+ (* alpha-k-s-0 input-tokens) (* alpha-k-s-1 output-tokens) (* alpha-k-s-2 input-tokens output-tokens)))]))])
 
-(define NANOSECONDS/HOURS (* 1000 1000 60 60))
+(define NANOSECONDS/HOURS 3.6e+12)
+
+;; A wild guess
+(define current-system-kw (make-parameter .5))
 
 (struct time-avg-inference-model (kw)
  #:methods gen:kwh-model
@@ -36,7 +40,7 @@
   (match* (model info)
    [((time-avg-inference-model kw)
      (inference-cost-info _1 _2 prompt-duration response-duration))
-    (* kw NANOSECONDS/HOURS (+ prompt-duration response-duration))]))])
+    (exact->inexact (* kw (/ (+ prompt-duration response-duration) NANOSECONDS/HOURS)))]))])
 
 (struct model-cost-info (model-name query-tco2/kwh training-tco2 training-kwh inference-model))
 
