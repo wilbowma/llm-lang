@@ -2,6 +2,7 @@
 
 (require 
  "backends/config.rkt"
+ "backends/co2-base.rkt"
  racket/port
  racket/match
  (for-syntax racket/base syntax/parse))
@@ -9,6 +10,8 @@
 (provide 
  prompt!
  current-response-timeout
+ current-model-cost-logger
+ string-stderr-model-cost-logger
  (rename-out
   [new-module-begin #%module-begin]
   [new-top-interaction #%top-interaction])
