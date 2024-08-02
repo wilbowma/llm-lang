@@ -52,7 +52,13 @@
  current-model-cost-log)
 
 (define current-model-cost-log (make-parameter '()))
-(define current-model-cost-logger (make-parameter (void)))
+
+(define (string-stderr-model-cost-logger log)
+  (displayln
+   (log->string (current-model-cost-log))
+   (current-cost-port)))
+
+(define current-model-cost-logger (make-parameter string-stderr-model-cost-logger))
 
 (define current-cost-port (make-parameter (current-error-port)))
 
@@ -86,8 +92,3 @@
    (format "For reference, this session could power an average American house for ~a years (and ~a years for the training costs)~n"
     (/ kwh-query AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE)
     (/ kwh-training AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE))))
-
-(define (string-stderr-model-cost-logger log)
-  (displayln
-   (log->string (current-model-cost-log))
-   (current-cost-port)))
