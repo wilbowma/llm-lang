@@ -30,9 +30,8 @@
     #:timeouts (make-timeout-config #:request (current-response-timeout))))
   (define response-hash (response-json rsp))
   (define response (hash-ref response-hash 'response))
-  (displayln
-   (model-cost-info->string (model-cost-info tco2/kwh phi3-model-params (hash-ref response-hash 'prompt_eval_count) (hash-ref response-hash 'eval_count) phi3-training-tco2 phi3-training-kwh))
-   (current-cost-port))
+  (log-model-cost!
+   (model-cost-info 'ollama/phi3 tco2/kwh phi3-model-params (hash-ref response-hash 'prompt_eval_count) (hash-ref response-hash 'eval_count) phi3-training-tco2 phi3-training-kwh))
   response)
 
 (current-send-prompt! phi3-send-prompt!)
