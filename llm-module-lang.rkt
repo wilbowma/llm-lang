@@ -1,13 +1,13 @@
 #lang racket/base
 
-(require 
+(require
  "backends/config.rkt"
  "backends/co2-base.rkt"
  racket/port
  racket/match
  (for-syntax racket/base syntax/parse))
 
-(provide 
+(provide
  prompt!
  current-response-timeout
  current-model-cost-logger
