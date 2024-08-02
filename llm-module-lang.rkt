@@ -9,6 +9,7 @@
 
 (provide
  prompt!
+ append-prompt!
  current-response-timeout
  current-model-cost-logger
  string-stderr-model-cost-logger
@@ -20,13 +21,17 @@
   #%module-begin
   #%top-interaction))
 
+(define (append-prompt! str)
+ (void (fprintf (current-prompt-port) "~a" str)))
+
 (define (wrap-f e)
  (match e
   [(? void?) e]
   ["\n" (void)]
-  [_ (void (fprintf (current-prompt-port) "~a" e))]))
+  [_ (append-prompt! e)]))
 
-(define (prompt!)
+(define (prompt! [str ""])
+ (append-prompt! str)
  (define prompt (bytes->string/utf-8 (get-output-bytes (current-prompt-port) #t) #\uFFFD))
  (unless (equal? "" prompt)
    ((current-send-prompt!) prompt)))
