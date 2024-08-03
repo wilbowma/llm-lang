@@ -46,7 +46,7 @@
 
   (define response-hash (response-json rsp))
 
-  (with-handlers ([values (lambda () (displayln "Request failed; check on your LLM, it may be sad" (current-error-port)))])
+  (with-handlers ([values (lambda _ (displayln "Request failed; check on your LLM, it may be sad" (current-error-port)))])
    (log-model-cost!
     (cost-log-entry
      llava-cost-info
