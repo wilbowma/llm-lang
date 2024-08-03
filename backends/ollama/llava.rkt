@@ -46,15 +46,16 @@
 
   (define response-hash (response-json rsp))
 
-  (log-model-cost!
-   (cost-log-entry
-    llava-cost-info
-    (inference-cost-info
-     (hash-ref response-hash 'prompt_eval_count)
-     (hash-ref response-hash 'eval_count)
-     (hash-ref response-hash 'prompt_eval_duration)
-     (hash-ref response-hash 'eval_duration))))
+  (with-handlers ([values (lambda () (displayln "Request failed; check on your LLM, it may be sad" (current-error-port)))])
+   (log-model-cost!
+    (cost-log-entry
+     llava-cost-info
+     (inference-cost-info
+      (hash-ref response-hash 'prompt_eval_count)
+      (hash-ref response-hash 'eval_count)
+      (hash-ref response-hash 'prompt_eval_duration)
+      (hash-ref response-hash 'eval_duration))))
 
-  (hash-ref response-hash 'response))
+   (hash-ref response-hash 'response)))
 
 (current-send-prompt! llava-send-prompt!)
