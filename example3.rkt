@@ -2,7 +2,7 @@
 
 @(require llm-lang/backends/gpt3-5 racket/port)
 
-@(OPENAI_API_KEY "xxxx-xxxx-xxxxx")
+@;(OPENAI_API_KEY (getenv "OPENAI_API_KEY"))
 
 I am a scientist interested in consturctive, critical feedback. I value precision, brevity, and falsifiability.
 
