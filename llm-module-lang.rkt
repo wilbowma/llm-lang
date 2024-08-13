@@ -2,7 +2,7 @@
 
 (require
  "backends/config.rkt"
- "backends/co2-base.rkt"
+ "backends/cost-base.rkt"
  racket/port
  racket/match
  (for-syntax racket/base syntax/parse))

@@ -4,7 +4,7 @@
  net/http-easy
  racket/port
  "../config.rkt"
- "../co2-base.rkt")
+ "../cost-base.rkt")
 
 ; https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
 
