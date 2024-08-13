@@ -21,6 +21,9 @@
 ; https://x.com/labenz/status/1654853390839472134/photo/1
 ; https://github.com/llv22/gpt4_essay/blob/master/GPT-4-9.JPG
 ; https://www.reddit.com/r/LocalLLaMA/comments/17lvquz/comment/k7hjc8b/
+;
+; This seems to line up with estimates of energy usage of GPT 3 from brown2020a, which showed .004kwh usage per page generated.
+; I'm getting .002 for small examples, so if we assume some constant overhead and/or optimization, or the input tokens matter, this seems to be validated.
 (define gpt3-inference-model (wilkins-inference-model -6.79 56.01 (* 7.29 (exp -2))))
 
 ; https://ourworldindata.org/grapher/carbon-intensity-electricity
