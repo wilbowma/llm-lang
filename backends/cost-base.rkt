@@ -42,7 +42,7 @@
      (inference-cost-info _1 _2 prompt-duration response-duration))
     (exact->inexact (* kw (/ (+ prompt-duration response-duration) NANOSECONDS/HOURS)))]))])
 
-(struct model-cost-info (model-name query-tco2/kwh training-tco2 training-kwh inference-model))
+(struct model-cost-info (model-name query-tco2/kwh query-water-L/kWh training-water-L/kWh training-tco2 training-kwh inference-model))
 
 (provide
  string-stderr-model-cost-logger
@@ -57,15 +57,21 @@
 
 (define (cost-entry->co2 entry)
  (match-define
-  (cost-log-entry (model-cost-info _1 query-tco2/kwh training-tco2 _2 inference-model) inference-info)
+  (cost-log-entry (model-cost-info _1 query-tco2/kwh _3 _4 training-tco2 _2 inference-model) inference-info)
   entry)
  (values (* (model->kwh inference-model inference-info) query-tco2/kwh) training-tco2))
 
 (define (cost-entry->kwh entry)
  (match-define
-  (cost-log-entry (model-cost-info _3 _1 _2 training-kwh inference-model) inference-info)
+  (cost-log-entry (model-cost-info _3 _1 _2 _4 _5 training-kwh inference-model) inference-info)
   entry)
  (values (model->kwh inference-model inference-info) training-kwh))
+
+(define (cost-entry->L entry)
+ (define-values (query training) (cost-entry->kwh entry))
+ (define query-L/kWh (model-cost-info-query-water-L/kWh (cost-log-entry-model-cost-info entry)))
+ (define training-L/kWh (model-cost-info-training-water-L/kWh (cost-log-entry-model-cost-info entry)))
+ (values (* query-L/kWh query) (* training-L/kWh training)))
 
 (define current-model-cost-log (make-parameter '()))
 
@@ -86,20 +92,28 @@
 (define AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE 10500)
 
 (define (log->string log)
- (define-values (co2-query kwh-query co2-training-set kwh-training-set)
+ (define-values (co2-query kwh-query L-query co2-training-set kwh-training-set L-training-set)
   (for/fold ([co2-query-cum 0]
              [kwh-query-cum 0]
+             [L-query-cum 0]
              ; probably should be hashes, mapping model names to costs
              [co2-training-set (set)]
-             [kwh-training-set (set)])
+             [kwh-training-set (set)]
+             [L-training-set (set)])
             ([entry log])
    (let-values ([(co2-query co2-training) (cost-entry->co2 entry)]
-                [(kwh-query kwh-training) (cost-entry->kwh entry)])
-    (values (+ co2-query-cum co2-query) (+ kwh-query-cum kwh-query)
+                [(kwh-query kwh-training) (cost-entry->kwh entry)]
+                [(L-query L-training) (cost-entry->L entry)])
+    (values 
+     (+ co2-query-cum co2-query) 
+     (+ kwh-query-cum kwh-query) 
+     (+ L-query-cum L-query)
      (set-add co2-training-set co2-training)
-     (set-add kwh-training-set kwh-training)))))
+     (set-add kwh-training-set kwh-training)
+     (set-add L-training-set L-training)))))
   (define kwh-training (for/sum ([i kwh-training-set]) i))
   (define co2-training (for/sum ([i co2-training-set]) i))
+  (define L-training (for/sum ([i L-training-set]) i))
   (string-append
    (format "Cumulative query costs for this session are ~a tCO2, relying on total one-time training cost of ~a tCO2~n" co2-query co2-training)
    #;(let-values ([(co2-emitter co2-emission) (co2-order-of-magntitude co2-query)])
@@ -109,4 +123,6 @@
     kwh-query kwh-training)
    (format "For reference, this session could power an average American house for ~a years (and ~a years for the training costs)~n"
     (/ kwh-query AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE)
-    (/ kwh-training AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE))))
+    (/ kwh-training AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE))
+   (format "Cumulative direct on-site cooling water costs for this session are ~a L, relying on total one-time training costs of ~a L~n"
+    L-query L-training)))
