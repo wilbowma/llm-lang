@@ -32,6 +32,9 @@
  (model-cost-info
   'ollama/llava
   tco2/kwh
+  0
+  ;; using average for microsoft from li2023
+  .55
   llava-training-tco2
   llava-training-kwh
   llava-inference-model))

@@ -23,8 +23,10 @@
 ; https://ourworldindata.org/grapher/carbon-intensity-electricity
 (define tco2/kwh (* 170 1.102311e-6))
 
+;; using average for microsoft from li2023
+;; 0 for local costs
 (define phi3-cost-info
- (model-cost-info 'ollama/phi3 tco2/kwh phi3-training-tco2 phi3-training-kwh phi3-inference-model))
+ (model-cost-info 'ollama/phi3 tco2/kwh 0 .55 phi3-training-tco2 phi3-training-kwh phi3-inference-model))
 
 (define (phi3-send-prompt! prompt)
   (define rsp

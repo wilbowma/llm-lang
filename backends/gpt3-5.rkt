@@ -29,8 +29,11 @@
 ; https://ourworldindata.org/grapher/carbon-intensity-electricity
 (define tco2/kwh (* 170 1.102311e-6))
 
+;; using US average of Microsoft's servers from li2023
+(define L/kWh .55)
+
 (define gpt3-cost-info
- (model-cost-info 'gpt3.5-turbo tco2/kwh gpt3-training-tco2 gpt3-training-kwh gpt3-inference-model))
+ (model-cost-info 'gpt3.5-turbo tco2/kwh L/kWh L/kWh gpt3-training-tco2 gpt3-training-kwh gpt3-inference-model))
 
 (define OPENAI_API_KEY
   (make-parameter #f
