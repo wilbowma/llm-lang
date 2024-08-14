@@ -36,7 +36,7 @@
  (model-cost-info 'gpt3.5-turbo tco2/kwh L/kWh L/kWh gpt3-training-tco2 gpt3-training-kwh gpt3-inference-model))
 
 (define OPENAI_API_KEY
-  (make-parameter #f
+  (make-parameter (getenv "OPENAI_API_KEY")
     (lambda (e)
       (unless (string? e)
        (error "OPENAI_API_KEY looks invalid; should be a string"))
