@@ -3,7 +3,14 @@
 (require
  racket/match
  racket/set
- racket/generic)
+ racket/generic
+ raart
+ racket/function
+ racket/port
+ racket/format
+ racket/math
+ racket/dict
+ racket/contract)
 
 (provide
  (struct-out model-cost-info)
@@ -91,6 +98,71 @@
 
 (define AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE 10500)
 
+(define (draw-table-as-raart-table-here t)
+ (draw-here
+  (table
+   (for/list ([row t])
+    (map (compose text (curry format "~a")) row)))))
+
+(define (unit-search unit conversion-hash v)
+ ; zero breaks order-of-magnitude
+ (if (zero? v)
+     (values unit v)
+     (for/fold ([unit unit] [v v])
+              ([(new-unit info) (in-dict conversion-hash)]
+               #:do [(match-define (cons pred conv) info)]
+               #:final (pred v)
+               #:unless (not (pred v)))
+      (values new-unit (conv v)))))
+
+(define kWh->xWh-search
+ (curry unit-search 'kWh
+  ; preds must uniquely determine
+  `((gWh . ,(cons (lambda (v) (>= (order-of-magnitude v) 6)) (curryr / (* 1000 1000))))
+    (mWh . ,(cons (lambda (v) ((between/c 1 5) (order-of-magnitude v))) (curryr / 1000)))
+    (Wh . ,(cons (lambda (v) (<= (order-of-magnitude v) 0)) (curry * 1000))))))
+
+(define tCO2->xCO2-search
+ (curry unit-search 'tCO2
+  `((mgCO2 . ,(cons (lambda (v) (<= (order-of-magnitude v) -9)) (curryr * 1000 1000 1000)))
+    (gCO2 . ,(cons (lambda (v) ((between/c -8 -4) (order-of-magnitude v))) (curryr * 1000 1000)))
+    (kgCO2 . ,(cons (lambda (v) ((between/c -3 -2) (order-of-magnitude v))) (curryr * 1000))))))
+
+(define Lwater->xwater-search
+ (curry unit-search 'L
+  `((mL . ,(cons (lambda (v) (<= (order-of-magnitude v) -3)) (curryr * 1000))))))
+
+(module+ test
+ (require rackunit)
+ (let-values ([(unit v) (kWh->xWh-search 6000)])
+  (check-equal? unit 'mWh)
+  (check-equal? v 6))
+
+ (let-values ([(unit v) (kWh->xWh-search .001)])
+  (check-equal? unit 'Wh)
+  (check-equal? v 1.0))
+
+ (let-values ([(unit v) (tCO2->xCO2-search 1000)])
+  (check-equal? unit 'tCO2)
+  (check-equal? v 1000))
+
+ (let-values ([(unit v) (tCO2->xCO2-search 1)])
+  (check-equal? unit 'tCO2)
+  (check-equal? v 1))
+
+ (let-values ([(unit v) (tCO2->xCO2-search .1)])
+  (check-equal? unit 'tCO2)
+  (check-equal? v .1))
+
+ (let-values ([(unit v) (tCO2->xCO2-search .001)])
+  (check-equal? unit 'kgCO2)
+  (check-equal? v 1.0))
+
+ (let-values ([(unit v) (tCO2->xCO2-search .00001)])
+  (check-equal? unit 'gCO2)
+  (check-equal? v 10.0))
+)
+
 (define (log->string log)
  (define-values (co2-query kwh-query L-query co2-training-set kwh-training-set L-training-set)
   (for/fold ([co2-query-cum 0]
@@ -104,25 +176,40 @@
    (let-values ([(co2-query co2-training) (cost-entry->co2 entry)]
                 [(kwh-query kwh-training) (cost-entry->kwh entry)]
                 [(L-query L-training) (cost-entry->L entry)])
-    (values 
-     (+ co2-query-cum co2-query) 
-     (+ kwh-query-cum kwh-query) 
+    (values
+     (+ co2-query-cum co2-query)
+     (+ kwh-query-cum kwh-query)
      (+ L-query-cum L-query)
      (set-add co2-training-set co2-training)
      (set-add kwh-training-set kwh-training)
      (set-add L-training-set L-training)))))
+
   (define kwh-training (for/sum ([i kwh-training-set]) i))
   (define co2-training (for/sum ([i co2-training-set]) i))
   (define L-training (for/sum ([i L-training-set]) i))
-  (string-append
-   (format "Cumulative query costs for this session are ~a tCO2, relying on total one-time training cost of ~a tCO2~n" co2-query co2-training)
-   #;(let-values ([(co2-emitter co2-emission) (co2-order-of-magntitude co2-query)])
-   (format "For reference, they query is close to the CO2 emitted by ~a (~a tCO2)~n"
-    co2-emitter co2-emission))
-   (format "Cumulative query costs for this session are ~a KWh, relying on total one-time training costs of ~a KWh~n"
-    kwh-query kwh-training)
-   (format "For reference, this session could power an average American house for ~a years (and ~a years for the training costs)~n"
-    (/ kwh-query AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE)
-    (/ kwh-training AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE))
-   (format "Cumulative direct on-site cooling water costs for this session are ~a L, relying on total one-time training costs of ~a L~n"
-    L-query L-training)))
+
+  (define render-nums (curryr ~r #:precision 2 #:group-sep ","))
+
+  (with-output-to-string
+   (thunk
+
+    (define-values (query-power-unit query-power-cost) (kWh->xWh-search kwh-query))
+    (define-values (query-co2-unit query-co2-cost) (tCO2->xCO2-search co2-query))
+    (define-values (query-water-unit query-water-cost) (Lwater->xwater-search L-query))
+    (displayln "Cumulative Query Session Costs")
+    (draw-table-as-raart-table-here
+     `((,(format "Power (~a)" query-power-unit)
+        ,(format "Carbon (~a)" query-co2-unit)
+        ,(format "Water (~a)" query-water-unit))
+       ,(map render-nums `(,query-power-cost ,query-co2-cost ,query-water-cost))))
+    (newline)
+
+    (define-values (training-power-unit training-power-cost) (kWh->xWh-search kwh-training))
+    (define-values (training-co2-unit training-co2-cost) (tCO2->xCO2-search co2-training))
+    (define-values (training-water-unit training-water-cost) (Lwater->xwater-search L-training))
+    (displayln "One-time Training Costs")
+    (draw-table-as-raart-table-here
+     `((,(format "Power (~a)" training-power-unit)
+        ,(format "Carbon (~a)" training-co2-unit)
+        ,(format "Water (~a)" training-water-unit))
+       ,(map render-nums `(,training-power-cost ,training-co2-cost ,training-water-cost)))))))
