@@ -83,10 +83,12 @@
 (define current-model-cost-log (make-parameter '()))
 
 (define (string-stderr-model-cost-logger log)
-  (displayln
-   (log->string (current-model-cost-log))
-   (current-cost-port)))
+ (displayln
+  (log->string (current-model-cost-log))
+  (current-cost-port))
+ log)
 
+;; a logger is a Log -> Log function, so loggers can be composed.
 (define current-model-cost-logger (make-parameter string-stderr-model-cost-logger))
 
 (define current-cost-port (make-parameter (current-error-port)))
