@@ -118,7 +118,7 @@
 (define kWh->xWh-search
  (curry unit-search 'kWh
   ; preds must uniquely determine
-  `((gWh . ,(cons (lambda (v) (>= (order-of-magnitude v) 6)) (curryr / (* 1000 1000))))
+  `((GWh . ,(cons (lambda (v) (>= (order-of-magnitude v) 6)) (curryr / (* 1000 1000))))
     (mWh . ,(cons (lambda (v) ((between/c 1 5) (order-of-magnitude v))) (curryr / 1000)))
     (Wh . ,(cons (lambda (v) (<= (order-of-magnitude v) 0)) (curry * 1000))))))
 
