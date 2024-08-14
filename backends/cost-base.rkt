@@ -165,6 +165,21 @@
   (check-equal? v 10.0))
 )
 
+; GPT written
+; ---
+
+(define (round-to-n x n)
+  (if (zero? x)
+      0
+      (let* ([magnitude (floor (log (abs x) 10))]
+             [scale (expt 10 (- magnitude (- n 1)))]
+             [scaled-x (/ x scale)]
+             [rounded-x (round scaled-x)])
+        (* rounded-x scale))))
+
+; end of GPT written
+; ---
+
 (define (log->string log)
  (define-values (co2-query kwh-query L-query co2-training-set kwh-training-set L-training-set)
   (for/fold ([co2-query-cum 0]
@@ -190,7 +205,7 @@
   (define co2-training (for/sum ([i co2-training-set]) i))
   (define L-training (for/sum ([i L-training-set]) i))
 
-  (define render-nums (curryr ~r #:precision 2 #:group-sep ","))
+  (define render-nums (compose (curryr ~r #:group-sep ",") (curryr round-to-n 2)))
 
   (with-output-to-string
    (thunk
