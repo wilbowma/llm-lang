@@ -210,6 +210,7 @@
   (with-output-to-string
    (thunk
 
+    ;; Session Table
     (define-values (query-power-unit query-power-cost) (kWh->xWh-search kwh-query))
     (define-values (query-co2-unit query-co2-cost) (tCO2->xCO2-search co2-query))
     (define-values (query-water-unit query-water-cost) (Lwater->xwater-search L-query))
@@ -221,6 +222,7 @@
        ,(map render-nums `(,query-power-cost ,query-co2-cost ,query-water-cost))))
     (newline)
 
+    ;; Training Table
     (define-values (training-power-unit training-power-cost) (kWh->xWh-search kwh-training))
     (define-values (training-co2-unit training-co2-cost) (tCO2->xCO2-search co2-training))
     (define-values (training-water-unit training-water-cost) (Lwater->xwater-search L-training))
@@ -229,4 +231,19 @@
      `((,(format "Power (~a)" training-power-unit)
         ,(format "Carbon (~a)" training-co2-unit)
         ,(format "Water (~a)" training-water-unit))
-       ,(map render-nums `(,training-power-cost ,training-co2-cost ,training-water-cost)))))))
+       ,(map render-nums `(,training-power-cost ,training-co2-cost ,training-water-cost))))
+
+    ;; Context Table
+    (displayln "References Resource Usage, for Context")
+    (draw-table-as-raart-table-here
+     `((Reference Power Carbon Water)
+       ; https://www.eia.gov/energyexplained/use-of-energy/electricity-use-in-homes.php
+       ,(let-values ([(power-unit power-value) (kWh->xWh-search 10500)]
+                     ; https://www.epa.gov/watersense/how-we-use-water
+                     [(water-unit water-value) (Lwater->xwater-search 1135.62)]
+                     ; https://css.umich.edu/publications/factsheets/sustainability-indicators/carbon-footprint-factsheet
+                     [(carbon-unit carbon-value) (tCO2->xCO2-search 48)])
+          `("1 US Household (Annual Usage)"
+            ,(format "~a~a" (render-nums power-value) power-unit)
+            ,(format "~a~a" (render-nums carbon-value) carbon-unit)
+            ,(format "~a~a" (render-nums water-value) water-unit))))))))
