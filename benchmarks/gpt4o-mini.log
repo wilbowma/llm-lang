@@ -12,6 +12,13 @@ One-time Training Costs
 │8.2        │3,500        │4,500,000│
 └───────────┴─────────────┴─────────┘
 
+References Resource Usage, for Context
+┌─────────────────────────────┬─────┬──────┬──────┐
+│Reference                    │Power│Carbon│Water │
+├─────────────────────────────┼─────┼──────┼──────┤
+│1 US Household (Annual Usage)│10MWh│48tCO2│1,100L│
+└─────────────────────────────┴─────┴──────┴──────┘
+
 # Racket Change Log: Version 8.10 (from 8.9)
 
 ## Release Date: [Insert Release Date Here]
