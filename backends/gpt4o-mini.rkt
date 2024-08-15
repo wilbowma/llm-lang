@@ -63,6 +63,7 @@
                                     'content (cons (hasheq 'type "text" 'text prompt)
                                                    (current-gpt4-images)))))
     #:timeouts (make-timeout-config #:request 120)))
+  (current-gpt4-image '())
   #;(displayln (response-json rsp))
 
   (define response-hash (response-json rsp))
