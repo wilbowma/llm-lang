@@ -128,7 +128,7 @@
  (curry unit-search 'tCO2
   `((mgCO2 . ,(cons (lambda (v) (<= (order-of-magnitude v) -9)) (curryr * 1000 1000 1000)))
     (gCO2 . ,(cons (lambda (v) ((between/c -8 -4) (order-of-magnitude v))) (curryr * 1000 1000)))
-    (KgCO2 . ,(cons (lambda (v) ((between/c -3 -2) (order-of-magnitude v))) (curryr * 1000))))))
+    (kgCO2 . ,(cons (lambda (v) ((between/c -3 -2) (order-of-magnitude v))) (curryr * 1000))))))
 
 (define Lwater->xwater-search
  (curry unit-search 'L
