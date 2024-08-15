@@ -243,7 +243,7 @@
                      [(water-unit water-value) (Lwater->xwater-search 1135.62)]
                      ; https://css.umich.edu/publications/factsheets/sustainability-indicators/carbon-footprint-factsheet
                      [(carbon-unit carbon-value) (tCO2->xCO2-search 48)])
-          `("1 US Household (Annual Usage)"
+          `("1 US Household (annual)"
             ,(format "~a~a" (render-nums power-value) power-unit)
             ,(format "~a~a" (render-nums carbon-value) carbon-unit)
             ,(format "~a~a" (render-nums water-value) water-unit)))
