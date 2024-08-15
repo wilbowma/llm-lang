@@ -45,6 +45,13 @@
        (error "OPENAI_API_KEY looks invalid; should be a string"))
       e)))
 
+(provide gpt4-add-image!)
+
+(define current-gpt4-images (make-parameter '()))
+
+(define (gpt4-add-image! type base64-data)
+ (current-gpt4-images (cons (hasheq 'type "image_url" 'image_url (hasheq 'url (format "data:image/~a;base64,~a" type base64-data))) (current-gpt4-images))))
+
 (define (gpt4o-mini-send-prompt! prompt)
   (define rsp
    (post "https://api.openai.com/v1/chat/completions"
@@ -52,7 +59,9 @@
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
     #:json
     (hasheq 'model "gpt-4o-mini"
-            'messages (list (hash 'role "user" 'content prompt 'stream #f)))
+            'messages (list (hasheq 'role "user"  'stream #f
+                                    'content (cons (hasheq 'type "text" 'text prompt)
+                                                   (current-gpt4-images)))))
     #:timeouts (make-timeout-config #:request 120)))
   #;(displayln (response-json rsp))
 
