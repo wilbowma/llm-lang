@@ -121,14 +121,14 @@
  (curry unit-search 'kWh
   ; preds must uniquely determine
   `((GWh . ,(cons (lambda (v) (>= (order-of-magnitude v) 6)) (curryr / (* 1000 1000))))
-    (mWh . ,(cons (lambda (v) ((between/c 1 5) (order-of-magnitude v))) (curryr / 1000)))
+    (MWh . ,(cons (lambda (v) ((between/c 1 5) (order-of-magnitude v))) (curryr / 1000)))
     (Wh . ,(cons (lambda (v) (<= (order-of-magnitude v) 0)) (curry * 1000))))))
 
 (define tCO2->xCO2-search
  (curry unit-search 'tCO2
   `((mgCO2 . ,(cons (lambda (v) (<= (order-of-magnitude v) -9)) (curryr * 1000 1000 1000)))
     (gCO2 . ,(cons (lambda (v) ((between/c -8 -4) (order-of-magnitude v))) (curryr * 1000 1000)))
-    (kgCO2 . ,(cons (lambda (v) ((between/c -3 -2) (order-of-magnitude v))) (curryr * 1000))))))
+    (KgCO2 . ,(cons (lambda (v) ((between/c -3 -2) (order-of-magnitude v))) (curryr * 1000))))))
 
 (define Lwater->xwater-search
  (curry unit-search 'L
