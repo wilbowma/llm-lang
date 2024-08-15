@@ -263,4 +263,24 @@
                 `("1 JFK -> LHR Flight"
                   ""
                   ,(format "~a~a" (render-nums carbon-value) carbon-unit)
-                  "")))))))
+                  ""))
+        ; https://www.eia.gov/electricity/annual/html/epa_04_03.html
+        ; 6542 generators at total 565950 MW capacity = 86.5102415164MW
+        ; capcity factors from here: https://www.eia.gov/electricity/annual/html/epa_04_08_a.html
+        ; 2022 average here 56% : https://www.eia.gov/todayinenergy/detail.php?id=61444
+        ; 2022 average heat rate: 7740; close to 45%:
+        ; https://www.eia.gov/tools/faqs/faq.php?id=107&t=3
+        ; https://www.eia.gov/electricity/annual/html/epa_08_01.html
+        ; 86.5102415164*.56*.45*hours in a year =
+        ,(let*-values ([(avg-kWh) (* 86.51 .56 .45 8766 1000)]
+                       ; https://m.dw.com/en/how-sustainable-is-wind-power/a-60268971 442 grams CO2 per kWh for natural gas
+                       [(avg-tCO2) (/ (* 422 avg-kWh) (* 1000 1000))]
+                       ;  2,793 gal/MWh in 2020 https://www.eia.gov/todayinenergy/detail.php?id=50698
+                       [(avg-water) (* 2793 (/ avg-kWh 1000) 3.79)]
+                       [(power-unit power-value) (kWh->xWh-search avg-kWh)]
+                       [(carbon-unit carbon-value) (tCO2->xCO2-search avg-tCO2)]
+                       [(water-unit water-value) (Lwater->xwater-search avg-water)])
+         `("1 Avg. Natural Gas Plant (annual)"
+           ,(format "-~a~a" (render-nums power-value) power-unit)
+           ,(format "~a~a" (render-nums carbon-value) carbon-unit)
+           ,(format "~a~a" (render-nums water-value) water-unit) "")))))))
