@@ -246,4 +246,21 @@
           `("1 US Household (Annual Usage)"
             ,(format "~a~a" (render-nums power-value) power-unit)
             ,(format "~a~a" (render-nums carbon-value) carbon-unit)
-            ,(format "~a~a" (render-nums water-value) water-unit))))))))
+            ,(format "~a~a" (render-nums water-value) water-unit)))
+        ; https://theicct.org/sites/default/files/publications/CO2-commercial-aviation-oct2020.pdf
+        ; all metric units with conversion factors.
+        ; also table 9 figures on emissions per flight of various aircraft
+        ; https://www.aircraft-commerce.com/wp-content/uploads/aircraft-commerce-docs/Flight%20Operations/2018/117_FLTOPS_A.pdf
+        ; Using Airbus A321neo, which is
+        ; NY to JFK is 2999 nm, 5555km
+        ; A321neo use 0.0107 fuel per ASM for ~2knm, with 192 seats
+        ; so .0107*192*2999 should yield fuel = 6,161.1456 in.. USG?
+        ; by conversion, 1 USG fuel -> 3.785 L fuel
+        ; 1 L fuel -> .8 kg fuel
+        ; 1 kg fuel -> 3.16 kgCO2
+        ; 1 kgCO2 -> .001 tCO2
+        ,(let-values ([(carbon-unit carbon-value) (tCO2->xCO2-search (* 6161.1456 3.785 .8 3.16 .001))])
+                `("1 JFK -> LHR Flight"
+                  ""
+                  ,(format "~a~a" (render-nums carbon-value) carbon-unit)
+                  "")))))))
