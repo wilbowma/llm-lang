@@ -9,7 +9,7 @@
 (provide OPENAI_API_KEY)
 
 ; Estimates of GPT-4 say 1.8 trillion parameters. Probably GPT4o-mini is an optimization of GPT 4, and its training cost is lower bounded by GPT 4.
-; Using LLMCarbon's number for GPT 3, which is validated, but is probably an underestimate of the training cost of 3.5-Turbo.
+; LLMCarbon's with a bunch of leaked unverfied data about GPT 4.
 ; https://github.com/llv22/gpt4_essay/blob/master/GPT-4-9.JPG
 (define gpt4-training-tco2
  3530.575367647057)
