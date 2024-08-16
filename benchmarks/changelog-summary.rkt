@@ -40,6 +40,8 @@ for the upcoming release v8.10 of Racket on GitHub.
 
 ## DIFF
 @; hack to get few enough tokens, since no tokenizer locally
-@(apply string-append (take (string-split (with-output-to-string (lambda () (system "cd racket; git diff --no-merges v8.9..v8.10 -- ':!.github' ':!**/startup.inc' ':!**/schemify.scm'")))) 20000))
+@; GPT rough rule of thumb, 1 token is approximately 4 characters or 0.75 words for English text.
+@; this roughly takes 20000 tokens
+@(list->string (take (string->list (with-output-to-string (lambda () (system "cd racket; git diff --no-merges v8.9..v8.10 -- ':!.github' ':!**/startup.inc' ':!**/schemify.scm'")))) 20000))
 
 @;(displayln (prompt!))
