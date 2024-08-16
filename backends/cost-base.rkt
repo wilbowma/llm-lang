@@ -137,7 +137,7 @@
 (module+ test
  (require rackunit)
  (let-values ([(unit v) (kWh->xWh-search 6000)])
-  (check-equal? unit 'mWh)
+  (check-equal? unit 'MWh)
   (check-equal? v 6))
 
  (let-values ([(unit v) (kWh->xWh-search .001)])
