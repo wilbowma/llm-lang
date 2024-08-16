@@ -1,0 +1,38 @@
+Cumulative Query Session Costs
+┌──────────┬─────────────┬─────────┐
+│Power (Wh)│Carbon (gCO2)│Water (L)│
+├──────────┼─────────────┼─────────┤
+│46        │8.6          │0        │
+└──────────┴─────────────┴─────────┘
+
+One-time Training Costs
+┌───────────┬─────────────┬─────────┐
+│Power (MWh)│Carbon (tCO2)│Water (L)│
+├───────────┼─────────────┼─────────┤
+│6.8        │2.7          │3,700    │
+└───────────┴─────────────┴─────────┘
+
+References Resource Usage, for Context
+┌─────────────────────────────────┬───────┬──────────┬──────────────┐
+│Reference                        │Power  │Carbon    │Water         │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 US Household (annual)          │10MWh  │48tCO2    │1,100L        │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 JFK -> LHR Flight              │       │59tCO2    │              │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 Avg. Natural Gas Plant (annual)│-190GWh│81,000tCO2│2,000,000,000L│
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│US per capita (annual)           │77MWh  │15tCO2    │1,500,000L    │
+└─────────────────────────────────┴───────┴──────────┴──────────────┘
+
+The given diff output represents changes made to three Racket files: `collects-path.rkt`, `racket_version.h`, and `README.txt`. Let's discuss each change in detail:
+
+1. **`collects-path.rkt`:** The first file, which contains code for updating the embedded path to "collects" (directory where racket collect files are stored) inside an executable during installation process, has been modified as follows: 
+
+    * Original lines of code that found `coLLECTs dIRECTORy:` and searched within it using regular expressions were removed. In their place, there is a new line defining the label `#rx#"coLLECTs dIRECTORy:"` which specifies "collects" as its default value to search for in an executable's path configuration data structure during installation or runtime when updating this embedded collect file system directory location (`dest`).
+    * Two additional lines of code were added, with the purpose being similar but specifying other paths. One line defines `#rx#"coNFIg dIRECTORy:"` as "config", which stands for collection configuration path and specifies where Racket's config files (such as `racket-user.json`) are located within an executable file during installation or runtime when updating this embedded 'lib' directory location (`dest`).
+    * The code related to creating a temporary input/output stream, locating the label in it with regular expressions and writing bytes representing new directories has been replaced by setting `set-executable-tag`. This function sets metadata tags on executables which can be used for various purposes including specifying default paths. 
+
+2. **`racket_version.h`:** The header file defining the version of MZScheme, a Scheme implementation in Racket language, has been altered by incrementing its Y-component (the major release number) from `9` to `10`, and also increasing X and Z components accordingly as they are auto-incremented when modifying just one.
+
+3. **`README.txt`:** The README file of the workspace directory has been updated by removing a reference about "explicit DLL load", which seems irrelevant in Racket's context, since it doesn't rely on external dynamic link libraries for its operations like many other languages do (such as C/C++). It also mentions paths to collect and config data structures within executables instead of referring only the 'collects'.

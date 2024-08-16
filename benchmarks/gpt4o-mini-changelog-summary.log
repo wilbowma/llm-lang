@@ -1,0 +1,54 @@
+Cumulative Query Session Costs
+┌──────────┬──────────────┬─────────┐
+│Power (Wh)│Carbon (kgCO2)│Water (L)│
+├──────────┼──────────────┼─────────┤
+│6,700     │1.2           │3.7      │
+└──────────┴──────────────┴─────────┘
+
+One-time Training Costs
+┌───────────┬─────────────┬─────────┐
+│Power (GWh)│Carbon (tCO2)│Water (L)│
+├───────────┼─────────────┼─────────┤
+│8.2        │3,500        │4,500,000│
+└───────────┴─────────────┴─────────┘
+
+References Resource Usage, for Context
+┌─────────────────────────────────┬───────┬──────────┬──────────────┐
+│Reference                        │Power  │Carbon    │Water         │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 US Household (annual)          │10MWh  │48tCO2    │1,100L        │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 JFK -> LHR Flight              │       │59tCO2    │              │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 Avg. Natural Gas Plant (annual)│-190GWh│81,000tCO2│2,000,000,000L│
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│US per capita (annual)           │77MWh  │15tCO2    │1,500,000L    │
+└─────────────────────────────────┴───────┴──────────┴──────────────┘
+
+✨ Exciting Announcement: Racket v8.10 is Coming! 🚀
+
+**Get ready for an improved experience with the upcoming Racket v8.10!** This release brings key enhancements and bug fixes that make programming more efficient and enjoyable! Here’s a sneak peek into the transformative changes:
+
+🔧 **Improved Stability and Compatibility**  
+We’ve patched issues affecting Cairo, ensuring smooth operation on macOS 14 Sonoma, which means fewer crashes and more reliability for your graphical applications! 🖥️
+
+🛠️ **Enhanced Syntax Parsing**  
+The `syntax/parse` library has undergone major improvements:
+- We've fixed various corner cases in the `syntax/parse` implementation, resulting in a more robust parsing experience. Users can expect improved handling of complex pattern matching, leading to fewer unexpected errors! 📝
+
+📦 **New Library Enhancements**  
+With the introduction of new mutable and immutable type predicates (`immutable-string?`, `mutable-string?`, etc.), Racket now provides better control over data mutability, making it easier to manage state in your programs. This is especially useful for developers focused on performance and reliability! 🎉
+
+🗂️ **Documentation Update**  
+We're committed to providing the best documentation possible! Links to the `racket/math` library have been improved for easy navigation, along with clearer documentation on resource writing in Windows. Dive into an enriched learning environment and quickly find what you need! 📚
+
+🪲 **Bug Fixes & Minor Tweaks**  
+This release also addresses various bugs to improve your coding experience. Highlights include:
+- Fixes for various contract-handling issues and bug fixes related to `call-in-continuation`.
+- Streamlined memory handling in `subprocess` and `expt` functions to minimize unexpected errors. 
+
+🔍 **For Developers**  
+If you're leveraging the `syntax/parse` features, look out for new optimizations in pattern matching that enhance your code's efficiency and clarity. Keep coding smartly! 💻
+
+Prepare to upgrade to Racket v8.10 and enjoy a wealth of improvements designed to empower your productivity and development experience! Happy coding! 🚀✨
+
