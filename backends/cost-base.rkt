@@ -260,10 +260,11 @@
         ; 1 kg fuel -> 3.16 kgCO2
         ; 1 kgCO2 -> .001 tCO2
         ,(let-values ([(carbon-unit carbon-value) (tCO2->xCO2-search (* 6161.1456 3.785 .8 3.16 .001))])
-                `("1 JFK -> LHR Flight"
-                  ""
-                  ,(format "~a~a" (render-nums carbon-value) carbon-unit)
-                  ""))
+           `("1 JFK -> LHR Flight"
+             ""
+             ,(format "~a~a" (render-nums carbon-value) carbon-unit)
+             ""))
+
         ; https://www.eia.gov/electricity/annual/html/epa_04_03.html
         ; 6542 generators at total 565950 MW capacity = 86.5102415164MW
         ; capcity factors from here: https://www.eia.gov/electricity/annual/html/epa_04_08_a.html
