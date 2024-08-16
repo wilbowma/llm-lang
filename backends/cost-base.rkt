@@ -233,6 +233,8 @@
         ,(format "Water (~a)" training-water-unit))
        ,(map render-nums `(,training-power-cost ,training-co2-cost ,training-water-cost))))
 
+    (newline)
+
     ;; Context Table
     (displayln "References Resource Usage, for Context")
     (draw-table-as-raart-table-here
