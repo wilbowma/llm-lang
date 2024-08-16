@@ -1,0 +1,50 @@
+Cumulative Query Session Costs
+┌──────────┬─────────────┬─────────┐
+│Power (Wh)│Carbon (gCO2)│Water (L)│
+├──────────┼─────────────┼─────────┤
+│61        │11           │0        │
+└──────────┴─────────────┴─────────┘
+
+One-time Training Costs
+┌───────────┬─────────────┬─────────┐
+│Power (MWh)│Carbon (tCO2)│Water (L)│
+├───────────┼─────────────┼─────────┤
+│6.8        │2.7          │3,700    │
+└───────────┴─────────────┴─────────┘
+
+References Resource Usage, for Context
+┌─────────────────────────────────┬───────┬──────────┬──────────────┐
+│Reference                        │Power  │Carbon    │Water         │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 US Household (annual)          │10MWh  │48tCO2    │1,100L        │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 JFK -> LHR Flight              │       │59tCO2    │              │
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│1 Avg. Natural Gas Plant (annual)│-190GWh│81,000tCO2│2,000,000,000L│
+├─────────────────────────────────┼───────┼──────────┼──────────────┤
+│US per capita (annual)           │77MWh  │15tCO2    │1,500,000L    │
+└─────────────────────────────────┴───────┴──────────┴──────────────┘
+
+@subsec{Runtime Configuration}
+@@ -4,7 +4,7 @@ Extra arguments following the last option are available from the
+ 
+   The user can run Racket as follows to configure runtime: `racket [--configure-runtime args]`.
++    This enables users and modules alike. In case you're curious about how a module itself should handle configuration, here's an example of using @as-index[@racket[dynamic-require]] within the body of your own module code to dynamically require other configurations or setup procedures before execution: `(dyn-require 'my/own/module
+ 
+     (list #"--configure-runtime") `(,@racket[_system-config]`,`\n    ,@racket[#f], \n)`))), @section{Racket Startup}
+@@ -735,6 +735,7 @@ Extra arguments following the last option are available from the
+ 
+   The user can run Racket as follows to configure startup: `racket [--configure-startup args]`. To see more details about how a module itself should handle configuration at startup time, here's an example of using `@as-index[@racket[dynamic-require]]` within the body of your own module code (e.g., as part of its initialization routine):
+(dyn-require 'my/own/module [#"--configure-startup"] `((init arg1), \n)) 
+@@ -809,7 +809,8 @@ each element in the sequence.
+   procedure that returns true if a value at position i is needed to process this item (and false otherwise). Since Racket's processing of sequences defaults #:early-next-pos=false for all but explicit calls to `#:continue-after-pos`, @racket[_continue-after-pos+val?] needs 
+@@ -865,7 +866,7 @@ each element in the sequence.
+ @subsection{Sequence Conversion}
+ 
+ @defproc[(sequence->stream [seq sequence?]) stream?]{
+    diff --git a/pkgs/racket-doc/scribblings/reference/sequences.scrbl b/pkags/racket-doc/scribblings/reference/sequences.scrbl
+index fea7d1a3d3..717a6892b9 100644
+@@ -510,7 +510,7 @@ Extra arguments following the last option are available from the
+ 
+   The user can run Racket as follows to configure startup: `racket [--configure-startup args]`. To see more details about how a module itself should handle configuration at runtime or initialization time (e.g., when working with sequences), here's an example of using `@as-index[@racket[dynamic-require]]` within the body of your own module code:
+(dyn-require 'my/own/module [#"--configure-startup"] `((,@racket[_early-next-pos] #:continue-after-pos? #[f])`, \n)) 
