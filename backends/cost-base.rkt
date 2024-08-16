@@ -283,4 +283,16 @@
          `("1 Avg. Natural Gas Plant (annual)"
            ,(format "-~a~a" (render-nums power-value) power-unit)
            ,(format "~a~a" (render-nums carbon-value) carbon-unit)
-           ,(format "~a~a" (render-nums water-value) water-unit) "")))))))
+           ,(format "~a~a" (render-nums water-value) water-unit)))
+
+        ; per capital US usage:
+	; https://ourworldindata.org/per-capita-co2
+        ; https://ourworldindata.org/water-use-stress
+        ; https://ourworldindata.org/grapher/per-capita-energy-use
+        ,(let-values ([(power-unit power-value) (kWh->xWh-search 77028)]
+                      [(carbon-unit carbon-value) (tCO2->xCO2-search 14.9)]
+                      [(water-unit water-value) (Lwater->xwater-search (* 1543 1000))])
+           `("US per capita (annual)"
+             ,(format "~a~a" (render-nums power-value) power-unit)
+             ,(format "~a~a" (render-nums carbon-value) carbon-unit)
+             ,(format "~a~a" (render-nums water-value) water-unit))))))))
