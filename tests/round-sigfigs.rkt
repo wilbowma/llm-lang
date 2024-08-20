@@ -3,8 +3,6 @@
 @(require "llm-macros.rkt" racket/function)
 @(require (for-syntax llm-lang/backends/gpt4o-mini))
 
-@(current-response-timeout 300)
-
 @; I happen to know GPT4 believes this function exists.
 @(define log10 (curryr log 10))
 
