@@ -3,7 +3,7 @@
 @(require "llm-macros.rkt" racket/function)
 @(require (for-syntax llm-lang/backends/gpt4o-mini))
 
-@(current-response-timeout 300))))
+@(current-response-timeout 300)
 
 @(define log10 (curryr log 10))
 
