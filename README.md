@@ -50,4 +50,3 @@ These backends are configured by setting certain configuration variables, usuall
 Read [config.rkt](backends/config.rkt) and [ollama/phi3.rkt](backends/ollama/phi3.rkt) to figure out how to write new backends; it's not complicated, because the system doesn't support much yet.
 
 I haven't thought about getting back more than text output, or configuring initial prompts, or streaming, or AICI, or pretty much anything.
-I probably won't make much more progress on this without a collaborator or a fit of inspiration.
