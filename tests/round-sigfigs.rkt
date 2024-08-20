@@ -5,6 +5,7 @@
 
 @(current-response-timeout 300)
 
+@; I happen to know GPT4 believes this function exists.
 @(define log10 (curryr log 10))
 
 @define-by-prompt[round-to-n]{
