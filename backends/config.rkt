@@ -6,6 +6,8 @@
 
 (define current-prompt-port (make-parameter (open-output-string)))
 
+(define current-llm-backend-name (make-parameter 'undefined))
+
 (define current-send-prompt!
  (make-parameter
   (lambda (e) (error "Unconfigured backend prompt sender; please require a backend"))))

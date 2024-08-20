@@ -8,6 +8,8 @@
 
 (provide OPENAI_API_KEY)
 
+(current-llm-backend-name 'gpt4o-mini)
+
 ; Estimates of GPT-4 say 1.8 trillion parameters. Probably GPT4o-mini is an optimization of GPT 4, and its training cost is lower bounded by GPT 4.
 ; LLMCarbon's with a bunch of leaked unverfied data about GPT 4.
 ; https://github.com/llv22/gpt4_essay/blob/master/GPT-4-9.JPG

@@ -10,6 +10,7 @@
 (provide
  prompt!
  append-prompt!
+ current-llm-backend-name
  current-response-timeout
  current-model-cost-logger
  string-stderr-model-cost-logger
