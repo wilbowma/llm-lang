@@ -10,7 +10,7 @@
 
 (define current-send-prompt!
  (make-parameter
-  (lambda (e) (error "Unconfigured backend prompt sender; please require a backend"))))
+  (lambda (e) (error "Unconfigured backend prompt sender; please require a backend. Failed to send prompt" e))))
 
 (define current-response-timeout
  (make-parameter 120 (lambda (e) (and (natural-number/c e) e))))

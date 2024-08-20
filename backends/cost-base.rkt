@@ -167,6 +167,7 @@
 
 ; GPT written
 ; ---
+; see tests/llm-macros.rkt
 
 (define (round-to-n x n)
   (if (zero? x)
@@ -176,7 +177,6 @@
              [scaled-x (/ x scale)]
              [rounded-x (round scaled-x)])
         (* rounded-x scale))))
-
 ; end of GPT written
 ; ---
 
