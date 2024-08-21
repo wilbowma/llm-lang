@@ -19,7 +19,9 @@
  (struct-out time-avg-inference-model)
  (struct-out cost-log-entry)
  current-cost-port
- current-system-kw)
+ current-system-kw
+ model->kwh
+ gen:kwh-model)
 
 (struct inference-cost-info (input-tokens output-tokens prompt-duration response-duration))
 
