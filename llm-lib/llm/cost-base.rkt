@@ -36,7 +36,8 @@
    (match* (model info)
     [((wilkins-inference-model alpha-k-s-0 alpha-k-s-1 alpha-k-s-2)
       (inference-cost-info input-tokens output-tokens _1 _2))
-     (* JOULES/KWH (+ (* alpha-k-s-0 input-tokens) (* alpha-k-s-1 output-tokens) (* alpha-k-s-2 input-tokens output-tokens)))]))])
+     ; sometimes, Wilkin's model can predict negative energy use.
+     (max 0 (* JOULES/KWH (+ (* alpha-k-s-0 input-tokens) (* alpha-k-s-1 output-tokens) (* alpha-k-s-2 input-tokens output-tokens))))]))])
 
 (define NANOSECONDS/HOURS 3.6e+12)
 
