@@ -3,6 +3,7 @@
 (require
  net/http-easy
  racket/port
+ "base.rkt"
  "config.rkt"
  "cost-base.rkt")
 
@@ -55,39 +56,24 @@
  (current-gpt4-images (cons (hasheq 'type "image_url" 'image_url (hasheq 'url (format "data:image/~a;base64,~a" type base64-data))) (current-gpt4-images))))
 
 (define (gpt4o-mini-send-prompt! prompt)
-
-  (log-llm-lang-debug "Authorization header for prompt: ~a" (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY))))
-  (log-llm-lang-debug "Posting ~a to ~a" (hasheq 'model "gpt-4o-mini"
-            'messages (list (hasheq 'role "user"  'stream #f
-                                    'content (cons (hasheq 'type "text" 'text prompt)
-                                                   (current-gpt4-images))))) "https://api.openai.com/v1/chat/completions")
-  (log-llm-lang-debug "Timeout set to ~a" (current-response-timeout))
-
-  (define rsp
-   (post "https://api.openai.com/v1/chat/completions"
-    #:headers
+  (define response-hash
+   (base-send-prompt!
+    "https://api.openai.com/v1/chat/completions"
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
-    #:json
     (hasheq 'model "gpt-4o-mini"
-            'messages (list (hasheq 'role "user"  'stream #f
-                                    'content (cons (hasheq 'type "text" 'text prompt)
-                                                   (current-gpt4-images)))))
-    #:timeouts (make-timeout-config #:request (current-response-timeout))))
+     'messages (list (hasheq 'role "user"  'stream #f
+		     'content (cons (hasheq 'type "text" 'text prompt)
+			     (current-gpt4-images))))
+     gpt4-cost-info
+     (lambda (rsp-hash)
+      (define usage (hash-ref rsp-hash 'usage))
+      (inference-cost-info
+       (hash-ref usage 'prompt_tokens)
+       (hash-ref usage 'completion_tokens)
+       #f
+       #f)))))
+
   (current-gpt4-images '())
-
-  (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
-
-  (define response-hash (response-json rsp))
-  (define usage (hash-ref response-hash 'usage))
-
-  (log-model-cost!
-   (cost-log-entry
-    gpt4-cost-info
-    (inference-cost-info
-     (hash-ref usage 'prompt_tokens)
-     (hash-ref usage 'completion_tokens)
-     #f
-     #f)))
 
   (hash-ref (hash-ref (list-ref (hash-ref response-hash 'choices) 0) 'message) 'content))
 

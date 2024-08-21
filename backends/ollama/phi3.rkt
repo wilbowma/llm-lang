@@ -4,6 +4,7 @@
  net/http-easy
  racket/port
  racket/function
+ "../base.rkt"
  "../config.rkt"
  "../cost-base.rkt")
 
@@ -29,27 +30,18 @@
  (model-cost-info 'ollama/phi3 tco2/kwh 0 .55 phi3-training-tco2 phi3-training-kwh phi3-inference-model))
 
 (define (phi3-send-prompt! prompt)
-  (log-llm-lang-debug "Posting ~a to ~a" (hash 'model "phi3" 'prompt prompt 'stream #f) (hash 'model "phi3" 'prompt prompt 'stream #f))
-  (log-llm-lang-debug "Timeout set to ~a" (current-response-timeout))
-
-  (define rsp
-   (post "http://localhost:11434/api/generate"
-    #:json
-    (hash 'model "phi3" 'prompt prompt 'stream #f)
-    #:timeouts (make-timeout-config #:request (current-response-timeout))))
-
-  (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
-
-  (define response-hash (response-json rsp))
-
-  (log-model-cost!
-   (cost-log-entry
-    phi3-cost-info
+ (define response-hash
+  (base-send-prompt!
+   "http://localhost:11434/api/generate"
+   (hasheq)
+   (hasheq 'model "phi3" 'prompt prompt 'stream #f)
+   phi3-cost-info
+   (lambda (response-hash)
     (inference-cost-info
      (hash-ref response-hash 'prompt_eval_count)
      (hash-ref response-hash 'eval_count)
      (hash-ref response-hash 'prompt_eval_duration)
-     (hash-ref response-hash 'eval_duration))))
+     (hash-ref response-hash 'eval_duration)))))
 
   (hash-ref response-hash 'response))
 

@@ -3,6 +3,7 @@
 (require
  net/http-easy
  racket/port
+ "base.rkt"
  "config.rkt"
  "cost-base.rkt")
 
@@ -43,32 +44,21 @@
       e)))
 
 (define (gpt3-5-send-prompt! prompt)
-  (log-llm-lang-debug "Authorization header for prompt: ~a" (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY))))
-  (log-llm-lang-debug "Posting ~a to ~a" (hasheq 'model "gpt-3.5-turbo" 'messages (list (hash 'role "user" 'content prompt 'stream #f))) "https://api.openai.com/v1/chat/completions")
-  (log-llm-lang-debug "Timeout set to ~a" (current-response-timeout))
-
-  (define rsp
-   (post "https://api.openai.com/v1/chat/completions"
-    #:headers
+  (define response-hash
+   (base-send-prompt!
+    "https://api.openai.com/v1/chat/completions"
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
-    #:json
     (hasheq 'model "gpt-3.5-turbo"
             'messages (list (hash 'role "user" 'content prompt 'stream #f)))
-    #:timeouts (make-timeout-config #:request (current-response-timeout))))
 
-  (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
-
-  (define response-hash (response-json rsp))
-  (define usage (hash-ref response-hash 'usage))
-
-  (log-model-cost!
-   (cost-log-entry
     gpt3-cost-info
-    (inference-cost-info
-     (hash-ref usage 'prompt_tokens)
-     (hash-ref usage 'completion_tokens)
-     #f
-     #f)))
+    (lambda (response-hash)
+     (define usage (hash-ref response-hash 'usage))
+     (inference-cost-info
+      (hash-ref usage 'prompt_tokens)
+      (hash-ref usage 'completion_tokens)
+      #f
+      #f))))
 
   (hash-ref (hash-ref (list-ref (hash-ref response-hash 'choices) 0) 'message) 'content))
 

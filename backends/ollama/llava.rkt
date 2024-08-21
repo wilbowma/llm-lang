@@ -3,6 +3,7 @@
 (require
  net/http-easy
  racket/port
+ "../base.rkt"
  "../config.rkt"
  "../cost-base.rkt")
 
@@ -40,30 +41,20 @@
   llava-inference-model))
 
 (define (llava-send-prompt! prompt)
-  (log-llm-lang-debug "Posting ~a to ~a" (hash 'model "llava" 'prompt prompt 'stream #f 'images (current-llava-images)) (hash 'model "phi3" 'prompt prompt 'stream #f))
-  (log-llm-lang-debug "Timeout set to ~a" (current-response-timeout))
+ (define response-hash
+  (base-send-prompt!
+   "http://localhost:11434/api/generate"
+   (hasheq)
+   (hash 'model "llava" 'prompt prompt 'stream #f 'images (current-llava-images))
+   llava-cost-info
+   (lambda (response-hash)
+    (inference-cost-info
+     (hash-ref response-hash 'prompt_eval_count)
+     (hash-ref response-hash 'eval_count)
+     (hash-ref response-hash 'prompt_eval_duration)
+     (hash-ref response-hash 'eval_duration)))))
 
-  (define rsp
-   (post "http://localhost:11434/api/generate"
-    #:json
-    (hash 'model "llava" 'prompt prompt 'stream #f 'images (current-llava-images))
-    #:timeouts (make-timeout-config #:request (current-response-timeout))))
   (current-llava-images '())
-
-  (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
-
-  (define response-hash (response-json rsp))
-
-  (with-handlers ([values (lambda _ (displayln "Request failed; check on your LLM, it may be sad" (current-error-port)))])
-   (log-model-cost!
-    (cost-log-entry
-     llava-cost-info
-     (inference-cost-info
-      (hash-ref response-hash 'prompt_eval_count)
-      (hash-ref response-hash 'eval_count)
-      (hash-ref response-hash 'prompt_eval_duration)
-      (hash-ref response-hash 'eval_duration))))
-
-   (hash-ref response-hash 'response)))
+  (hash-ref response-hash 'response))
 
 (current-send-prompt! llava-send-prompt!)
