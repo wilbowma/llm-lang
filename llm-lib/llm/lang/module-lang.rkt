@@ -1,8 +1,8 @@
 #lang racket/base
 
 (require
- "config.rkt"
- "cost-base.rkt"
+ "../config.rkt"
+ "../cost-base.rkt"
  racket/port
  racket/match
  (for-syntax racket/base syntax/parse))
@@ -22,20 +22,11 @@
   #%module-begin
   #%top-interaction))
 
-(define (append-prompt! str)
- (void (fprintf (current-prompt-port) "~a" str)))
-
 (define (wrap-f e)
  (match e
   [(? void?) e]
   ["\n" (void)]
   [_ (append-prompt! e)]))
-
-(define (prompt! [str ""])
- (append-prompt! str)
- (define prompt (bytes->string/utf-8 (get-output-bytes (current-prompt-port) #t) #\uFFFD))
- (unless (equal? "" prompt)
-   ((current-send-prompt!) prompt)))
 
 (define-syntax (wrap stx)
   (syntax-parse stx
@@ -48,8 +39,9 @@
   (syntax-parse stx
     [(_ e ...)
      #`(#%module-begin
-         (wrap e) ...
-         (displayln (prompt!)))]))
+        ;; TODO: why is this not just wrap-f?
+        (wrap e) ...
+        (displayln (prompt!)))]))
 
 (define-syntax (new-top-interaction stx)
   (syntax-parse stx
