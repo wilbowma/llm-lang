@@ -54,8 +54,7 @@
     #:json
     (hasheq 'model "gpt-3.5-turbo"
             'messages (list (hash 'role "user" 'content prompt 'stream #f)))
-    #:timeouts (make-timeout-config #:request 120)))
-  #;(displayln (response-json rsp))
+    #:timeouts (make-timeout-config #:request (current-response-timeout))))
 
   (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
 

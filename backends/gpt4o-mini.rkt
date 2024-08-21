@@ -72,9 +72,8 @@
             'messages (list (hasheq 'role "user"  'stream #f
                                     'content (cons (hasheq 'type "text" 'text prompt)
                                                    (current-gpt4-images)))))
-    #:timeouts (make-timeout-config #:request 120)))
+    #:timeouts (make-timeout-config #:request (current-response-timeout))))
   (current-gpt4-images '())
-  #;(displayln (response-json rsp))
 
   (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
 
