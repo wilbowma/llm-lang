@@ -43,6 +43,10 @@
       e)))
 
 (define (gpt3-5-send-prompt! prompt)
+  (log-llm-lang-debug "Authorization header for prompt: ~a" (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY))))
+  (log-llm-lang-debug "Posting ~a to ~a" (hasheq 'model "gpt-3.5-turbo" 'messages (list (hash 'role "user" 'content prompt 'stream #f))) "https://api.openai.com/v1/chat/completions")
+  (log-llm-lang-debug "Timeout set to ~a" (current-response-timeout))
+
   (define rsp
    (post "https://api.openai.com/v1/chat/completions"
     #:headers
@@ -52,6 +56,8 @@
             'messages (list (hash 'role "user" 'content prompt 'stream #f)))
     #:timeouts (make-timeout-config #:request 120)))
   #;(displayln (response-json rsp))
+
+  (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
 
   (define response-hash (response-json rsp))
   (define usage (hash-ref response-hash 'usage))

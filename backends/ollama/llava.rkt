@@ -40,12 +40,17 @@
   llava-inference-model))
 
 (define (llava-send-prompt! prompt)
+  (log-llm-lang-debug "Posting ~a to ~a" (hash 'model "llava" 'prompt prompt 'stream #f 'images (current-llava-images)) (hash 'model "phi3" 'prompt prompt 'stream #f))
+  (log-llm-lang-debug "Timeout set to ~a" (current-response-timeout))
+
   (define rsp
    (post "http://localhost:11434/api/generate"
     #:json
     (hash 'model "llava" 'prompt prompt 'stream #f 'images (current-llava-images))
     #:timeouts (make-timeout-config #:request (current-response-timeout))))
   (current-llava-images '())
+
+  (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
 
   (define response-hash (response-json rsp))
 

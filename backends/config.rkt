@@ -14,3 +14,5 @@
 
 (define current-response-timeout
  (make-parameter 120 (lambda (e) (and (natural-number/c e) e))))
+
+(define-logger llm-lang)

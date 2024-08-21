@@ -55,6 +55,14 @@
  (current-gpt4-images (cons (hasheq 'type "image_url" 'image_url (hasheq 'url (format "data:image/~a;base64,~a" type base64-data))) (current-gpt4-images))))
 
 (define (gpt4o-mini-send-prompt! prompt)
+
+  (log-llm-lang-debug "Authorization header for prompt: ~a" (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY))))
+  (log-llm-lang-debug "Posting ~a to ~a" (hasheq 'model "gpt-4o-mini"
+            'messages (list (hasheq 'role "user"  'stream #f
+                                    'content (cons (hasheq 'type "text" 'text prompt)
+                                                   (current-gpt4-images))))) "https://api.openai.com/v1/chat/completions")
+  (log-llm-lang-debug "Timeout set to ~a" (current-response-timeout))
+
   (define rsp
    (post "https://api.openai.com/v1/chat/completions"
     #:headers
@@ -67,6 +75,8 @@
     #:timeouts (make-timeout-config #:request 120)))
   (current-gpt4-images '())
   #;(displayln (response-json rsp))
+
+  (log-llm-lang-debug "Response JSON: ~a" (response-json rsp))
 
   (define response-hash (response-json rsp))
   (define usage (hash-ref response-hash 'usage))
