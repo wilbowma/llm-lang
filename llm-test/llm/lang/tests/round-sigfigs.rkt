@@ -1,10 +1,11 @@
-#lang llm-lang
+#lang llm
 
 @(require "llm-macros.rkt" racket/function)
-@(require (for-syntax llm-lang/backends/gpt4o-mini))
+@(require (for-syntax llm/openai/gpt4o-mini))
 
-@; I happen to know GPT4 believes this function exists.
+@; I happen to know GPT4 believes these functions exists.
 @(define log10 (curryr log 10))
+@(define ceil ceiling)
 
 @define-by-prompt[round-to-n]{
 Define a Racket function `round-to-n` that rounds a given number to a given number of significant digits.

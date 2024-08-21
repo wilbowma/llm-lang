@@ -1,7 +1,7 @@
 #lang llm-lang
 
 @(require
-  llm-lang/backends/ollama/phi3
+  llm-lang/ollama/phi3
   racket/file
   racket/system
   racket/port

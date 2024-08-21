@@ -1,5 +1,5 @@
 #lang llm
 
-@(require llm/ollama/phi3)
+@(require llm/ollama/llava)
 
 Are you working correctly?
