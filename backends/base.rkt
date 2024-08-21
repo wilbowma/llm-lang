@@ -1,12 +1,15 @@
 #lang racket/base
 
-(require 
+(require
  net/http-easy
  "config.rkt"
  "cost-base.rkt"
- openssl/md5)
+ openssl/md5
+ with-cache)
 
-(provide base-send-prompt!)
+(provide
+ base-send-prompt!
+ cached-send-prompt!)
 
 (define (base-send-prompt! uri headers json cost-base-info inference-cost-maker)
   (define timeout (current-response-timeout))
@@ -29,8 +32,20 @@
 
   response-hash)
 
-#;(define (cached-send-prompt! uri headers json cost-base-info inference-cost-maker prompt)
- (with-cache (cachefile (md5 (open-input-string prompt)))
+(define (cached-send-prompt! uri headers json cost-base-info inference-cost-maker prompt)
+ (define name (current-llm-backend-name))
+ (define prompt-hash (md5 (open-input-string prompt)))
+ (define log-file-name (format "~a-~a-replay.log" name prompt-hash))
+ (with-cache (cachefile log-file-name)
   (lambda ()
-   (base-send-prompt uri headers json cost-base-info inference-cost-maker))
-  #:keys (list current-llm-backend-name (lambda () uri) (lambda () headers) (lambda () json) current-response-timeout prompt)))
+   (base-send-prompt! uri headers json cost-base-info inference-cost-maker))
+  #:keys (list current-llm-backend-name (lambda () uri) (lambda () headers) (lambda () json) current-response-timeout (lambda () prompt)))
+  #|
+  ;; Could hook into read and write to log the current cost, but I think for now the behaviour of *not* reporting cost on a cached response is good enough.
+  #:write (lambda (e)
+	   (with-output-to-file (format "~a-~a-cost.log" name prompt-hash)
+	    ;; sexp->fasl?
+	    (lambda () (write (serialize (current-model-cost-log)))))
+	   (serialize e))
+  |#
+  )

@@ -57,7 +57,7 @@
 
 (define (gpt4o-mini-send-prompt! prompt)
   (define response-hash
-   (base-send-prompt!
+   (cached-send-prompt!
     "https://api.openai.com/v1/chat/completions"
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
     (hasheq 'model "gpt-4o-mini"
@@ -71,7 +71,8 @@
        (hash-ref usage 'prompt_tokens)
        (hash-ref usage 'completion_tokens)
        #f
-       #f)))))
+       #f)))
+    prompt))
 
   (current-gpt4-images '())
 

@@ -45,7 +45,7 @@
 
 (define (gpt3-5-send-prompt! prompt)
   (define response-hash
-   (base-send-prompt!
+   (cached-send-prompt!
     "https://api.openai.com/v1/chat/completions"
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
     (hasheq 'model "gpt-3.5-turbo"
@@ -58,7 +58,8 @@
       (hash-ref usage 'prompt_tokens)
       (hash-ref usage 'completion_tokens)
       #f
-      #f))))
+      #f))
+    prompt))
 
   (hash-ref (hash-ref (list-ref (hash-ref response-hash 'choices) 0) 'message) 'content))
 

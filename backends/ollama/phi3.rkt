@@ -31,7 +31,7 @@
 
 (define (phi3-send-prompt! prompt)
  (define response-hash
-  (base-send-prompt!
+  (cached-send-prompt!
    "http://localhost:11434/api/generate"
    (hasheq)
    (hasheq 'model "phi3" 'prompt prompt 'stream #f)
@@ -41,7 +41,8 @@
      (hash-ref response-hash 'prompt_eval_count)
      (hash-ref response-hash 'eval_count)
      (hash-ref response-hash 'prompt_eval_duration)
-     (hash-ref response-hash 'eval_duration)))))
+     (hash-ref response-hash 'eval_duration)))
+   prompt))
 
   (hash-ref response-hash 'response))
 
