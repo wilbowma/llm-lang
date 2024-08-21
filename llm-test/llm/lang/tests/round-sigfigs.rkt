@@ -1,7 +1,7 @@
-#lang llm-lang
+#lang llm
 
 @(require "llm-macros.rkt" racket/function)
-@(require (for-syntax llm-lang/backends/gpt4o-mini))
+@(require (for-syntax llm/openai/gpt4o-mini))
 
 @; I happen to know GPT4 believes this function exists.
 @(define log10 (curryr log 10))

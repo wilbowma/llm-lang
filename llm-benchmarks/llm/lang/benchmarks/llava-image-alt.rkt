@@ -1,7 +1,7 @@
 #lang llm-lang
 
 @(require
-  llm-lang/backends/ollama/llava
+  llm-lang/ollama/llava
   racket/file
   net/base64
   racket/port

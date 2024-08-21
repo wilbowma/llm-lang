@@ -14,17 +14,17 @@ When you want to perform normal computation, you escape into the Racket programm
 For example, the following configure an LLM backend and ask "Are you working correctly?", `display`ing the reply.
 
 ```
-#lang llm-lang
+#lang llm
 
-@(require llm-lang/backends/ollama/phi3)
+@(require llm/ollama/phi3)
 
 Are you working correctly?
 ```
 
 ```
-#lang llm-lang
+#lang llm
 
-@(require llm-lang/backends/gpt3-5)
+@(require llm/openai/gpt3-5)
 
 @(OPENAI_API_KEY "xxxx-xxxx-xxxxxxxx")
 
@@ -47,6 +47,6 @@ This LLM-first approach to prompts is the main difference in design between this
 
 The language is designed to support multiple backends, but only currently implements Phi-3 via Ollama (https://ollama.com) and GPT 3.5 Turbo (https://platform.openai.com/docs/models/gpt-3-5-turbo).
 These backends are configured by setting certain configuration variables, usually by requiring a file as in the above example.
-Read [config.rkt](backends/config.rkt) and [ollama/phi3.rkt](backends/ollama/phi3.rkt) to figure out how to write new backends; it's not complicated, because the system doesn't support much yet.
+Read [config.rkt](config.rkt) and [ollama/phi3.rkt](ollama/phi3.rkt) to figure out how to write new backends; it's not complicated, because the system doesn't support much yet.
 
 I haven't thought about getting back more than text output, or configuring initial prompts, or streaming, or AICI, or pretty much anything.

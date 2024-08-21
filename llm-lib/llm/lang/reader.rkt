@@ -1,6 +1,6 @@
 #lang s-exp syntax/module-reader
 
-llm-lang/llm-module-lang
+llm/lang/llm-module-lang
 
 #:read scribble:read-inside
 #:read-syntax scribble:read-syntax-inside

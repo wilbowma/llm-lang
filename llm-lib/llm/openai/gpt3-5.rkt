@@ -3,9 +3,9 @@
 (require
  net/http-easy
  racket/port
- "base.rkt"
- "config.rkt"
- "cost-base.rkt")
+ "../base.rkt"
+ "../config.rkt"
+ "../cost-base.rkt")
 
 (provide OPENAI_API_KEY)
 

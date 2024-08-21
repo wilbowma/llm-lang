@@ -1,8 +1,8 @@
 #lang racket/base
 
 (require
- "backends/config.rkt"
- "backends/cost-base.rkt"
+ "config.rkt"
+ "cost-base.rkt"
  racket/port
  racket/match
  (for-syntax racket/base syntax/parse))

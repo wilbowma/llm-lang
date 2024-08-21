@@ -1,7 +1,7 @@
-#lang llm-lang
+#lang llm
 
 @(require
-  llm-lang/backends/gpt4o-mini
+  llm/openai/gpt4o-mini
   racket/file
   net/base64
   racket/port

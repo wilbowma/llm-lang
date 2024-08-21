@@ -1,6 +1,6 @@
-#lang llm-lang
+#lang llm
 
-@(require llm-lang/backends/gpt3-5 racket/port)
+@(require llm/openai/gpt3-5 racket/port)
 
 @;(OPENAI_API_KEY (getenv "OPENAI_API_KEY"))
 
