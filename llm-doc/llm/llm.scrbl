@@ -104,7 +104,8 @@ References Resource Usage, for Context
 
 The cost is only reported when a prompt is actually sent, and not when a cached
 response to replayed.
-The costs are pretty rough estimates.
+The costs are pretty rough estimates; see @secref["LLM_Cost_Model" #:doc '(lib
+"llm/llm.scrbl")] for more details.
 
 You might use @racketmodname[llm] lang while writing your documents in
 @racketmodname[scribble/base], by running a prompt to fill in some boiler plate
@@ -115,9 +116,9 @@ text:
 
 @title{My cool paper}
 @prompt!{
-Write a concise motivation and introduce to the problem of first-class
+Write a concise motivation and introduction to the problem of first-class
 prompt-engineering.
-Make sure to use plenty of hyperbole to motivate investors for give me millions
+Make sure to use plenty of hyperbole to motivate investors to give me millions
 of dollars for a solution to a non-existant problem.
 }
 }|
