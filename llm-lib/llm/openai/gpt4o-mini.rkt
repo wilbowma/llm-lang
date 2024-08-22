@@ -58,8 +58,8 @@
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
     (hasheq 'model "gpt-4o-mini"
      'messages (list (hasheq 'role "user"  'stream #f
-		     'content (cons (hasheq 'type "text" 'text prompt)
-			     (current-gpt4-images))))
+                     'content (cons (hasheq 'type "text" 'text prompt)
+                                    (current-gpt4-images))))
      gpt4-cost-info
      (lambda (rsp-hash)
       (define usage (hash-ref rsp-hash 'usage))
