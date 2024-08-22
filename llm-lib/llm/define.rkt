@@ -21,9 +21,7 @@
       #,@(map
           (curry datum->syntax syn)
           (with-input-from-string
-           (with-cache (format "~a-code.rktd" name-str)
-            (lambda () (prompt! prompt-str))
-            #:keys (list (lambda () prompt-str) (lambda () name-str) current-llm-backend-name))
+	   (prompt! prompt-str)
            (lambda ()
             (let loop ([defs '()])
              (let ([d (read)])
