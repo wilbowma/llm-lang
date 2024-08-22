@@ -41,9 +41,9 @@
      #`(#%module-begin
         ;; TODO: why is this not just wrap-f?
         (wrap e) ...
-        (displayln (prompt!)))]))
+        (display (prompt!)))]))
 
 (define-syntax (new-top-interaction stx)
   (syntax-parse stx
     [(_ . e)
-     #`(begin (wrap-f e) (displayln (prompt!)))]))
+     #`(begin (wrap-f e) (display (prompt!)))]))
