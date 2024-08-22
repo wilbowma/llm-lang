@@ -5,4 +5,4 @@
 (define pkg-desc "A prototype LLM-first programming language.")
 (define version "0.2")
 (define pkg-authors '(wilbowma))
-(define license '(MIT))
+(define license 'MIT)

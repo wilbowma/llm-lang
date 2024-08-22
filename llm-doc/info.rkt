@@ -5,4 +5,4 @@
 (define pkg-desc "Documentation for llm-lib.")
 (define version "0.2")
 (define pkg-authors '(wilbowma))
-(define license '(MIT))
+(define license 'MIT)

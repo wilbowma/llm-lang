@@ -5,3 +5,4 @@
 (define update-implies '("llm-lib"))
 (define pkg-desc "Tests for \"llm-lib\".")
 (define pkg-authors '(wilbowma))
+(define license 'MIT)
