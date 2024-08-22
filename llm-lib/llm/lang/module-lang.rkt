@@ -47,3 +47,11 @@
   (syntax-parse stx
     [(_ . e)
      #`(begin (wrap-f e) (display (prompt!)))]))
+
+(require scribble/reader)
+(current-read-interaction
+  (lambda (fo e)
+    (syntax-case (read-syntax-inside fo e) ()
+      [() eof]
+      [(str ...)
+       #'(string-append (format "~a" str) ...)])))

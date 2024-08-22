@@ -139,6 +139,11 @@ Define a Racket function `round-to-n` that rounds a given number to a given numb
 @(displayln (round-to-n 5.0123123 3))
 }|
 
+By default, @racketmodname[llm] lang modifies the @racket[current-read-interaction], so you can continue talking to your LLM at the REPL:
+@(require racket/runtime-path)
+@(define-runtime-path screenshot "DrRacket-screenshot.png")
+@image[screenshot]
+
 @include-section{scribblings/main.scrbl}
 @include-section{scribblings/define.scrbl}
 @include-section{scribblings/cost.scrbl}
