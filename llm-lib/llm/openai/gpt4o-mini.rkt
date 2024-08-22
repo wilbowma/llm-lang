@@ -49,6 +49,8 @@
 (define (gpt4-add-image! type base64-data)
  (current-gpt4-images (cons (hasheq 'type "image_url" 'image_url (hasheq 'url (format "data:image/~a;base64,~a" type base64-data))) (current-gpt4-images))))
 
+(provide gpt4o-mini-send-prompt!)
+
 (define (gpt4o-mini-send-prompt! prompt)
   (define response-hash
    (cached-send-prompt!

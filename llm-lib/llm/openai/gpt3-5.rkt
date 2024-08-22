@@ -37,6 +37,8 @@
 (define gpt3-cost-info
  (model-cost-info 'gpt3.5-turbo tco2/kwh L/kWh L/kWh gpt3-training-tco2 gpt3-training-kwh gpt3-inference-model))
 
+(provide gpt3-5-send-prompt!)
+
 (define (gpt3-5-send-prompt! prompt)
   (define response-hash
    (cached-send-prompt!

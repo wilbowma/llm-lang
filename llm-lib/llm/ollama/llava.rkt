@@ -40,6 +40,8 @@
   llava-training-kwh
   llava-inference-model))
 
+(provide llava-send-prompt!)
+
 (define (llava-send-prompt! prompt)
  (define response-hash
   (cached-send-prompt!

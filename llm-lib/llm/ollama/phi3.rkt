@@ -29,6 +29,8 @@
 (define phi3-cost-info
  (model-cost-info 'ollama/phi3 tco2/kwh 0 .55 phi3-training-tco2 phi3-training-kwh phi3-inference-model))
 
+(provide phi3-send-prompt!)
+
 (define (phi3-send-prompt! prompt)
  (define response-hash
   (cached-send-prompt!
