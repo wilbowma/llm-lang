@@ -3,6 +3,7 @@
 (require
  net/http-easy
  racket/port
+ "config.rkt"
  "../base.rkt"
  "../config.rkt"
  "../cost-base.rkt")
@@ -40,13 +41,6 @@
 
 (define gpt4-cost-info
  (model-cost-info 'gpt4o-mini tco2/kwh L/kWh L/kWh gpt4-training-tco2 gpt4-training-kwh gpt4-inference-model))
-
-(define OPENAI_API_KEY
-  (make-parameter (getenv "OPENAI_API_KEY")
-    (lambda (e)
-      (unless (string? e)
-       (error "OPENAI_API_KEY looks invalid; should be a string"))
-      e)))
 
 (provide gpt4-add-image!)
 
