@@ -3,6 +3,7 @@
 (require
  net/http-easy
  racket/port
+ "config.rkt"
  "../base.rkt"
  "../config.rkt"
  "../cost-base.rkt")
@@ -35,13 +36,6 @@
 
 (define gpt3-cost-info
  (model-cost-info 'gpt3.5-turbo tco2/kwh L/kWh L/kWh gpt3-training-tco2 gpt3-training-kwh gpt3-inference-model))
-
-(define OPENAI_API_KEY
-  (make-parameter (getenv "OPENAI_API_KEY")
-    (lambda (e)
-      (unless (string? e)
-       (error "OPENAI_API_KEY looks invalid; should be a string"))
-      e)))
 
 (define (gpt3-5-send-prompt! prompt)
   (define response-hash
