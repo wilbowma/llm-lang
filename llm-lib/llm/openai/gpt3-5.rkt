@@ -39,13 +39,16 @@
 
 (provide gpt3-5-send-prompt!)
 
-(define (gpt3-5-send-prompt! prompt)
+(define (gpt3-5-send-prompt! prompt messages)
+  (define new-messages
+   (reverse (cons (hasheq 'role "user" 'content prompt) messages)))
   (define response-hash
    (cached-send-prompt!
     "https://api.openai.com/v1/chat/completions"
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
     (hasheq 'model "gpt-3.5-turbo"
-            'messages (list (hash 'role "user" 'content prompt 'stream #f)))
+            'stream #f
+            'messages new-messages)
 
     gpt3-cost-info
     (lambda (response-hash)
@@ -55,8 +58,11 @@
       (hash-ref usage 'completion_tokens)
       #f
       #f))
-    prompt))
+    prompt
+    messages))
 
-  (hash-ref (hash-ref (list-ref (hash-ref response-hash 'choices) 0) 'message) 'content))
+  (define rsp (hash-ref (hash-ref (list-ref (hash-ref response-hash 'choices) 0) 'message) 'content))
+  (append-message! 'assistant rsp)
+  rsp)
 
 (current-send-prompt! gpt3-5-send-prompt!)

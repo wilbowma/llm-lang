@@ -42,12 +42,15 @@
 
 (provide llava-send-prompt!)
 
-(define (llava-send-prompt! prompt)
+(define (llava-send-prompt! prompt [messages '()])
+ (define new-messages
+  (reverse
+   (cons (hasheq 'role "user" 'content prompt) messages)))
  (define response-hash
   (cached-send-prompt!
-   "http://localhost:11434/api/generate"
+   "http://localhost:11434/api/chat"
    (hasheq)
-   (hash 'model "llava" 'prompt prompt 'stream #f 'images (current-llava-images))
+   (hash 'model "llava" 'messages new-messages 'stream #f 'images (current-llava-images))
    llava-cost-info
    (lambda (response-hash)
     (inference-cost-info
@@ -55,9 +58,12 @@
      (hash-ref response-hash 'eval_count)
      (hash-ref response-hash 'prompt_eval_duration)
      (hash-ref response-hash 'eval_duration)))
-   prompt))
+   prompt
+   messages))
 
   (current-llava-images '())
-  (hash-ref response-hash 'response))
+  (let ([resp (hash-ref (hash-ref response-hash 'message) 'content)])
+   (append-prompt! 'assistant resp)
+   resp))
 
 (current-send-prompt! llava-send-prompt!)

@@ -32,14 +32,14 @@
 
   response-hash)
 
-(define (cached-send-prompt! uri headers json cost-base-info inference-cost-maker prompt)
+(define (cached-send-prompt! uri headers json cost-base-info inference-cost-maker prompt messages)
  (define name (current-llm-backend-name))
- (define prompt-hash (md5 (open-input-string prompt)))
+ (define prompt-hash (md5 (open-input-string (format "~a-~a" prompt messages))))
  (define log-file-name (format "~a-~a-replay.log" name prompt-hash))
  (with-cache (cachefile log-file-name)
   (lambda ()
    (base-send-prompt! uri headers json cost-base-info inference-cost-maker))
-  #:keys (list current-llm-backend-name (lambda () uri) (lambda () headers) (lambda () json) current-response-timeout (lambda () prompt)))
+  #:keys (list current-llm-backend-name (lambda () uri) (lambda () json) current-response-timeout (lambda () prompt) (lambda () messages)))
   #|
   ;; Could hook into read and write to log the current cost, but I think for now the behaviour of *not* reporting cost on a cached response is good enough.
   #:write (lambda (e)

@@ -51,15 +51,20 @@
 
 (provide gpt4o-mini-send-prompt!)
 
-(define (gpt4o-mini-send-prompt! prompt)
+(define (gpt4o-mini-send-prompt! prompt messages)
+  (define new-messages
+   (reverse
+    (cons
+     (hasheq 'role "user" 'content
+      (cons (hasheq 'type "text" 'text prompt) (current-gpt4-images)))
+     messages)))
   (define response-hash
    (cached-send-prompt!
     "https://api.openai.com/v1/chat/completions"
     (hasheq 'Authorization (format "Bearer ~a" (OPENAI_API_KEY)))
     (hasheq 'model "gpt-4o-mini"
-     'messages (list (hasheq 'role "user"  'stream #f
-                     'content (cons (hasheq 'type "text" 'text prompt)
-                                    (current-gpt4-images)))))
+     'stream #f
+     'messages new-messages)
      gpt4-cost-info
      (lambda (rsp-hash)
       (define usage (hash-ref rsp-hash 'usage))
@@ -68,10 +73,13 @@
        (hash-ref usage 'completion_tokens)
        #f
        #f))
-    prompt))
+    prompt
+    messages))
 
   (current-gpt4-images '())
 
-  (hash-ref (hash-ref (list-ref (hash-ref response-hash 'choices) 0) 'message) 'content))
+  (let ([resp (hash-ref (hash-ref (list-ref (hash-ref response-hash 'choices) 0) 'message) 'content)])
+   (append-message! 'assistant resp)
+   resp))
 
 (current-send-prompt! gpt4o-mini-send-prompt!)

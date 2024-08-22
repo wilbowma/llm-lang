@@ -31,12 +31,14 @@
 
 (provide phi3-send-prompt!)
 
-(define (phi3-send-prompt! prompt)
+(define (phi3-send-prompt! prompt [messages '()])
+ (define new-messages
+  (reverse (cons (hasheq 'role "user" 'content prompt) messages)))
  (define response-hash
   (cached-send-prompt!
-   "http://localhost:11434/api/generate"
+   "http://localhost:11434/api/chat"
    (hasheq)
-   (hasheq 'model "phi3" 'prompt prompt 'stream #f)
+   (hasheq 'model "phi3" 'messages new-messages 'stream #f)
    phi3-cost-info
    (lambda (response-hash)
     (inference-cost-info
@@ -44,8 +46,11 @@
      (hash-ref response-hash 'eval_count)
      (hash-ref response-hash 'prompt_eval_duration)
      (hash-ref response-hash 'eval_duration)))
-   prompt))
+   prompt
+   messages))
 
-  (hash-ref response-hash 'response))
+  (let ([resp (hash-ref (hash-ref response-hash 'message) 'content)])
+   (append-message! 'assistant resp)
+   resp))
 
 (current-send-prompt! phi3-send-prompt!)
