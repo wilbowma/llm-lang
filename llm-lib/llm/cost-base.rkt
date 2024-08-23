@@ -4,7 +4,7 @@
  racket/match
  racket/set
  racket/generic
- raart
+ "ascii-art-table.rkt"
  racket/function
  racket/port
  racket/format
@@ -103,11 +103,11 @@
 
 (define AVERAGE-ANNUAL-KWH-AMERICAN-HOUSE 10500)
 
-(define (draw-table-as-raart-table-here t)
- (draw-here
-  (table
-   (for/list ([row t])
-    (map (compose text (curry format "~a")) row)))))
+(define (draw-as-strings-table rows)
+ (draw-table
+  (for/list ([row rows])
+   (for/list ([cell row])
+    (format "~a" cell)))))
 
 (define (unit-search unit conversion-hash v)
  ; zero breaks order-of-magnitude
@@ -218,7 +218,7 @@
     (define-values (query-co2-unit query-co2-cost) (tCO2->xCO2-search co2-query))
     (define-values (query-water-unit query-water-cost) (Lwater->xwater-search L-query))
     (displayln "Cumulative Query Session Costs")
-    (draw-table-as-raart-table-here
+    (draw-table
      `((,(format "Power (~a)" query-power-unit)
         ,(format "Carbon (~a)" query-co2-unit)
         ,(format "Water (~a)" query-water-unit))
@@ -230,7 +230,7 @@
     (define-values (training-co2-unit training-co2-cost) (tCO2->xCO2-search co2-training))
     (define-values (training-water-unit training-water-cost) (Lwater->xwater-search L-training))
     (displayln "One-time Training Costs")
-    (draw-table-as-raart-table-here
+    (draw-table
      `((,(format "Power (~a)" training-power-unit)
         ,(format "Carbon (~a)" training-co2-unit)
         ,(format "Water (~a)" training-water-unit))
@@ -240,7 +240,7 @@
 
     ;; Context Table
     (displayln "References Resource Usage, for Context")
-    (draw-table-as-raart-table-here
+    (draw-as-strings-table
      `((Reference Power Carbon Water)
        ; https://www.eia.gov/energyexplained/use-of-energy/electricity-use-in-homes.php
        ,(let-values ([(power-unit power-value) (kWh->xWh-search 10500)]
