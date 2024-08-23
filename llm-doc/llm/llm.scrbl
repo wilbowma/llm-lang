@@ -9,7 +9,8 @@
    racket/contract
    net/http-easy
    llm
-   llm/define))
+   llm/define
+   with-cache))
 
 @title[#:style '(toc)]{llm lang}
 @author[@author+email["William J. Bowman" "wjb@williamjbowman.com"]]
@@ -46,7 +47,7 @@ To use @racketmodname[llm] lang, start your file with @tt{#lang llm}, import a b
 What is 2+2?
 }|
 
-@racketmodname[llm] lang uses the at expression reader (@racket[at-exp]), so by
+@racketmodname[llm] lang uses the at expression reader (@racketmodname[at-exp]), so by
 default you're writing a prompt, and can escape into Racket using
 @code{@"@"}, such as in @code{@"@"(f)} to call the function @code{f}.
 Every top-level expression---except @racket[""], @racket[(void)], and
