@@ -25,11 +25,13 @@ to avoid unnecessarily rerunning the same prompt.
 
 But who better to explain it than an LLM!
 
+@nested[#:style 'inset
 @prompt!{
 Write a brief introduction to "LLM Lang", a programming language with first-class prompt engineering support.
 Features include by-default prompt writing, escaping into the Racket programming language for computation, multiple backends, cost logging, and response caching and replay to reduce cost.
 End by acknowledging that you, the LLM, wrote this introduction.
 }
+]
 
 Well I'm sure that was helpful.
 
