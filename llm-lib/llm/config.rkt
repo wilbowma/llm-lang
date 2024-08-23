@@ -34,4 +34,9 @@
 (define current-response-timeout
  (make-parameter 120 (lambda (e) (and (natural-number/c e) e))))
 
+;; #f or a number
+(define current-prompt-seed (make-parameter #f))
+
+(define current-prompt-temperature (make-parameter #f))
+
 (define-logger llm-lang)

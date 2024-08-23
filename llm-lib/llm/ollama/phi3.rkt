@@ -34,6 +34,10 @@
 (define (phi3-send-prompt! prompt [messages '()])
  (define new-messages
   (reverse (cons (hasheq 'role "user" 'content prompt) messages)))
+ (define seed (current-prompt-seed))
+ (define temp (current-prompt-temperature))
+ (define options (hasheq))
+ ;(when seed (hash
  (define response-hash
   (cached-send-prompt!
    "http://localhost:11434/api/chat"
