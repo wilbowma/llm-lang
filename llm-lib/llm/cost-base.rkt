@@ -10,7 +10,8 @@
  racket/format
  racket/math
  racket/dict
- racket/contract)
+ racket/contract
+ "config.rkt")
 
 (provide
  (struct-out model-cost-info)
@@ -195,21 +196,21 @@
 ; (or/c 'queries 'training)
 (define (current-carbon-use [mode 'queries])
  (match mode
-  ['queries (call-with-values get-cost-log-data (lambda (tco2-query _ _ _ _ _) co2-query))]
-  ['training (call-with-values get-cost-log-data (lambda (_ _ _ _ tco2-training _) co2-training))]
-  [_ (error "invalid cost mode")))
+  ['queries (call-with-values get-cost-log-data (lambda (tco2-query _1 _2 _3 _4 _5) tco2-query))]
+  ['training (call-with-values get-cost-log-data (lambda (_1 _2 _3 _4 tco2-training _5) tco2-training))]
+  [_ (error "invalid cost mode")]))
 
 (define (current-power-use [mode 'queries])
  (match mode
-  ['queries (call-with-values get-cost-log-data (lambda (_ kwh-query _ _ _ _ _) kwh-query))]
-  ['training (call-with-values get-cost-log-data (lambda (_ _ _ kwh-training _ _) kwh-training))]
-  [_ (error "invalid cost mode")))
+  ['queries (call-with-values get-cost-log-data (lambda (_1 kwh-query _2 _3 _4 _5) kwh-query))]
+  ['training (call-with-values get-cost-log-data (lambda (_1 _2 _3 kwh-training _4 _5) kwh-training))]
+  [_ (error "invalid cost mode")]))
 
 (define (current-water-use [mode 'queries])
  (match mode
-  ['queries (call-with-values get-cost-log-data (lambda (_ _ L-query _ _ _ _ _) L-query))]
-  ['training (call-with-values get-cost-log-data (lambda (_ _ _ _ _ L-training_) L-training))]
-  [_ (error "invalid cost mode")))
+  ['queries (call-with-values get-cost-log-data (lambda (_1 _2 L-query _3 _4 _5) L-query))]
+  ['training (call-with-values get-cost-log-data (lambda (_1 _2 _3 _4 _5 L-training) L-training))]
+  [_ (error "invalid cost mode")]))
 
 (define (get-cost-log-data [log (current-model-cost-log)])
  (define-values (co2-query kwh-query L-query co2-training-set kwh-training-set L-training-set)
@@ -236,10 +237,10 @@
   (define co2-training (for/sum ([i co2-training-set]) i))
   (define L-training (for/sum ([i L-training-set]) i))
 
-  (values co2-query kw-query L-query kwh-training co2-training L-training))
+  (values co2-query kwh-query L-query kwh-training co2-training L-training))
 
 (define (log->string log)
- (define-values co2-query kw-query L-query kwh-training co2-training L-training) (get-cost-log-data log)
+ (define-values (co2-query kwh-query L-query kwh-training co2-training L-training) (get-cost-log-data log))
 
  (define render-nums (compose (curryr ~r #:group-sep ",") (curryr round-to-n 2)))
 
