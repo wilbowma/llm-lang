@@ -4,7 +4,9 @@
   (for-label
    racket/base
    racket/contract
-   llm/cost-base))
+   llm/cost-base
+   llm
+   racket/logging))
 
 @title{LLM Cost Model}
 @defmodule[llm/cost-base]
@@ -12,10 +14,12 @@
 @racketmodname[llm] lang integrates several cost models of LLMs to report
 training and inference costs after each query.
 This feedback is reported after each prompt is sent to the
-@racket[current-cost-port], which is set to @racket[current-error-port] by
-default.
+@racket[llm-lang-logger] as @racket[log-level/c] @racket['info], topic
+@racket['llm-lang].
 The intention is to ensure the developer is given feedback about the potential
 resource cost of their query to encourage better prompt-engineering practice.
+The raw data is also available through @racket[current-carbon-use],
+@racket[current-power-use], and @racket[current-water-use].
 
 @bibliography[
 (bib-entry
@@ -132,15 +136,23 @@ the cost model information for the LLM backend, and the cost information for a
 given query.
 }
 
-@defparam[current-cost-port port output-port? #:value (current-error-port)]{
-The port to which the @racket[current-model-cost-log] is written, using
-@racket[current-model-cost-logger], after each call to @racket[prompt!].
+@defparam[current-model-cost-logger logger-f (-> (list/c cost-log-entry?) (list/c cost-log-entry?))
+          #:value log-logger]{
+A parameter defining how to write the log after each call to @racket[prompt!].
+The @racket[logger-f] should return a (possibly modified) log, in order to be able to compose loggers.
 }
 
-@defparam[current-model-cost-logger logger (-> (list/c cost-log-entry?) (list/c cost-log-entry?))
-          #:value string-stderr-model-cost-logger]{
-A parameter defining how to write the log after each call to @racket[prompt!].
-The @racket[logger] should return a (possibly modified) log, in order to be able to compose loggers.
+@defproc[(log-logger [log (list/c cost-log-entry?)]) (list/c cost-log-entry?)]{
+A logger that writes the log, as a string, to the @racket[llm-lang-logger],
+with @racket[log-level/c] @racket['info] and topic @racket['llm-lang],
+returning the log unchanged.
+Uses @racket[log->string] to produce a readable string representation of the
+log and report contextualizing information.
+}
+
+@defparam[current-cost-port port output-port? #:value (current-error-port)]{
+The port to which the @racket[current-model-cost-log] is written, by
+@racket[string-stderr-model-cost-logger], after each call to @racket[prompt!].
 }
 
 @defproc[(string-stderr-model-cost-logger [log (list/c cost-log-entry?)]) (list/c cost-log-entry?)]{
@@ -155,4 +167,25 @@ Render the log as a readable string representation, with information contextuali
 
 @defproc[(log-model-cost! [entry cost-log-entry?]) void?]{
 Prepend @racket[entry] to the @racket[current-cost-log].
+}
+
+@defproc[(current-carbon-use [mode (or/c 'queries 'training) 'queries]) number?]{
+Reports the current estimate of CO2 used by llm-lang backends, in tons of CO2.
+The mode @racket['queries] reports the CO2 used by the queries of this session,
+while @racket['training] reports the estimate of the CO2 used in one-time
+training costs used to train the backends used in this session.
+}
+
+@defproc[(current-power-use [mode (or/c 'queries 'training) 'queries]) number?]{
+Reports the current power used by llm-lang backends, in kWh.
+The mode @racket['queries] reports the power used by the queries of this session,
+while @racket['training] reports the estimate of the power used in one-time
+training costs used to train the backends used in this session.
+}
+
+@defproc[(current-water-use [mode (or/c 'queries 'training) 'queries]) number?]{
+Reports the current water used by llm-lang backends, in litres.
+The mode @racket['queries] reports the water used by the queries of this session,
+while @racket['training] reports the estimate of the water used in one-time
+training costs used to train the backends used in this session.
 }
