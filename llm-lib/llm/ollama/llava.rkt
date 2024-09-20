@@ -63,7 +63,7 @@
 
   (current-llava-images '())
   (let ([resp (hash-ref (hash-ref response-hash 'message) 'content)])
-   (append-prompt! 'assistant resp)
+   (append-message! 'assistant resp)
    resp))
 
 (current-send-prompt! llava-send-prompt!)
