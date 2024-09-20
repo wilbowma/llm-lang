@@ -37,4 +37,6 @@ Typically configured by importing a backend, rather than accessed manually.
 A parameter that defines the how many seconds to wait for a response from the LLM after sending a prompt.
 }
 
-
+@defthing[llm-lang-logger logger?]{
+A @racket[logger?] that reports debug and cost information about @racketmodname[llm].
+}
