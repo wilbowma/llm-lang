@@ -87,14 +87,21 @@
 
 (define (string-stderr-model-cost-logger log)
  (displayln
-  (log->string (current-model-cost-log))
+  (log->string log)
   (current-cost-port))
  log)
 
-;; a logger is a Log -> Log function, so loggers can be composed.
-(define current-model-cost-logger (make-parameter string-stderr-model-cost-logger))
-
 (define current-cost-port (make-parameter (current-error-port)))
+
+(define (void-logger log) log)
+
+(define (log-logger log)
+ (log-llm-lang-info (log->string log))
+ log)
+
+;; a logger is a Log -> Log function, so loggers can be composed.
+(define current-model-cost-logger (make-parameter log-logger))
+
 
 (define (log-model-cost! entry)
  (let ([new-log (cons entry (current-model-cost-log))])

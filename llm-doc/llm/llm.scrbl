@@ -66,25 +66,30 @@ easily call prompts in your Racket programs.
 (prompt! "What is 2+2? Give only the answer without explanation.")
 ]
 
-By default, the cost in terms of power, carbon, and water of each request is
-estimated and logged, and reported to the @racket[current-cost-port] with
-contextualizing information, to help developers understand the resource usage
-of their prompts.
+By default, the resource cost in terms of power, carbon, and water of each
+request is estimated and logged, and reported to the @racket[logger]
+@racket[llm-lang-logger] with contextualizing information, to help developers
+understand the resource usage of their prompts.
+This data, in raw form, is also available through
+@racket[current-carbon-use], @racket[current-power-use], and
+@racket[current-water-use].
 
 @examples[
 (require llm llm/ollama/phi3 with-cache)
 (eval:alts
 (parameterize ([*use-cache?* #f])
- (prompt! "What is 2+2? Give only the answwer without explanation."))
+ (with-logging-to-port (current-error-port)
+  (lambda () (prompt! "What is 2+2? Give only the answwer without explanation."))
+  #:logger llm-lang-logger 'info 'llm-lang))
 (eval:result
 "\"4\""
 ""
-"Cumulative Query Session Costs
-┌───────────┬─────────────┬─────────┐
-│Power (kWh)│Carbon (tCO2)│Water (L)│
-├───────────┼─────────────┼─────────┤
-│0          │0            │0        │
-└───────────┴─────────────┴─────────┘
+"llm-lang: Cumulative Query Session Costs
+┌──────────┬─────────────┬─────────┐
+│Power (Wh)│Carbon (gCO2)│Water (L)│
+├──────────┼─────────────┼─────────┤
+│0.064     │0.012        │0        │
+└──────────┴─────────────┴─────────┘
 One-time Training Costs
 ┌───────────┬─────────────┬─────────┐
 │Power (MWh)│Carbon (tCO2)│Water (L)│
@@ -105,7 +110,7 @@ References Resource Usage, for Context
 └─────────────────────────────────┴───────┴──────────┴──────────────┘"))
 ]
 
-The cost is only reported when a prompt is actually sent, and not when a cached
+The cost is logged each time a prompt is actually sent, and not when a cached
 response to replayed.
 The costs are pretty rough estimates; see @secref["LLM_Cost_Model" #:doc '(lib
 "llm/llm.scrbl")] for more details.
