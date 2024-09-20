@@ -14,7 +14,7 @@
  current-response-timeout
  current-model-cost-logger
  llm-lang-logger
- current-memory-use
+ current-power-use
  current-carbon-use
  current-water-use
  (rename-out
