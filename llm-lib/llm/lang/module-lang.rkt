@@ -52,9 +52,14 @@
      #`(begin (wrap-f e) (display (prompt!)))]))
 
 (require scribble/reader)
+(define (wrap2 str)
+ (match str
+  [(? void?) ""]
+  [_ (format "~a" str)]))
+
 (current-read-interaction
   (lambda (fo e)
     (syntax-case (read-syntax-inside fo e) ()
       [() eof]
       [(str ...)
-       #'(string-append (format "~a" str) ...)])))
+       #'(string-append (wrap2 str) ...)])))
