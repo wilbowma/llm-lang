@@ -1,6 +1,6 @@
 #lang llm
 
-@(require llm/ollama/phi3)
+@(require racket/base llm/ollama/phi3)
 
 @(current-response-timeout 300)
 
