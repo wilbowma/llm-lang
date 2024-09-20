@@ -13,7 +13,10 @@
  current-llm-backend-name
  current-response-timeout
  current-model-cost-logger
- string-stderr-model-cost-logger
+ llm-lang-logger
+ current-power-use
+ current-carbon-use
+ current-water-use
  (rename-out
   [new-module-begin #%module-begin]
   [new-top-interaction #%top-interaction])
