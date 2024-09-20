@@ -43,6 +43,7 @@
     [(_ e ...)
      #`(#%module-begin
         ;; TODO: why is this not just wrap-f?
+        ;; doesn't work with require!
         (wrap e) ...
         (display (prompt!)))]))
 
