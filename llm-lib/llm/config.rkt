@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/contract)
+(require racket/contract racket/string)
 
 (provide (all-defined-out))
 
@@ -26,7 +26,7 @@
 (define (prompt! . strs)
  (for ([str strs])
   (append-prompt! str))
- (define prompt (bytes->string/utf-8 (get-output-bytes (current-prompt-port) #t) #\uFFFD))
+ (define prompt (string-trim (bytes->string/utf-8 (get-output-bytes (current-prompt-port) #t) #\uFFFD) #:repeat? #t))
  (if (equal? "" prompt)
      ""
      ((current-send-prompt!) prompt (current-chat-history))))
