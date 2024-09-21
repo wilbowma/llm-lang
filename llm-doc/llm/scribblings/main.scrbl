@@ -10,9 +10,11 @@
 @title{LLM API Library}
 @;defmodule[llm #:no-declare]
 
-@defproc[(prompt! [strs string?] ...) void?]{
+@defproc[(prompt! [strs string?] ...) (or/c void? string?)]{
 Sends the current prompt, from @racket[current-prompt-port], to the current LLM backend via @racket[current-send-prompt!].
 The values @racket[strs] are first written to @racket[current-prompt-port].
+No prompt is sent os the @racket[current-prompt-port] is empty.
+The result is the string returned by the LLM, or @racket[(void)] if no prompt is sent.
 
 @examples[
 (require llm llm/ollama/phi3)

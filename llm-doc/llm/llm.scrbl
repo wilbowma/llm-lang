@@ -51,13 +51,45 @@ What is 2+2?
 default you're writing a prompt, and can escape into Racket using
 @code{@"@"}, such as in @code{@"@"(f)} to call the function @code{f}.
 Every top-level expression---except @racket[""], @racket[(void)], and
-@racket["\n"]---is collected into a prompt, which is sent either at the end of
-the module, or by an explicit call to @racket[prompt!].
+explicitly @racket[unprompt]ed values---is collected into a prompt, which is
+sent either at the end of the module, or by an explicit call to
+@racket[prompt!].
 The result of the prompt is cached against prompt and various configuration
 parameters, and will be replayed on future runs by default.
 An explicit call to @racket[prompt!] allows you to capture the response, and
 compute over it.
-When a response is returned to the top-level, it is @racket[display]ed.
+
+To return a value to Racket, instead of to the prompt, use the keyword @racket[unprompt].
+@codeblock|{
+#lang llm
+@(require llm/ollama/phi3)
+
+@(unprompt 5)
+}|
+
+This example returns @racket[5] to Racket, which is printed using the @racket[current-print] handler.
+@racket[unprompt] is roughly analogous to @racket[unquote], and by default, all
+top-level values are under an implicit quasiquote operation to build the
+prompt.
+
+@nested[#:style 'inset
+@defform[(unprompt e)]{
+Returns @racket[e] as a value for interpretation by the current continuation, instead of collecting it in a prompt.
+The value may still be collected in a prompt, if the current continuation is
+explicitly constructing a prompt, such as @racket[(prompt! (format "~a"
+(unprompt 5)))].
+}
+]
+
+The @racketmodname[at-exp] reader is also used in the REPL, and the @racket[unprompt] form is also recognized there.
+Multiple unstructured datums can be written in the REPL, which are collected into a prompt.
+For example, entering @tt{What is 2+2?} in @racketmodname[llm] lang REPL will send the prompt @racket["What is 2+2?"].
+Any @racket[unprompt]ed values in the REPL are returned as multiple return values, and displayed using the @racket[current-print] handler.
+For example, entering @tt|{@(unprompt 5) @(unprompt 6)}| at the REPL returns the values @racket[(values 5 6)] to the REPL.
+
+
+@racketmodname[llm] lang redefines the @racket[current-print] handler @racket[display] all values, except @racket[(void)].
+Since the primary mode of interaction is a dialogue with an LLM, this makes reading the response easier.
 
 Requiring @racketmodname[llm], rather than using it as a language, allows you to
 easily call prompts in your Racket programs.

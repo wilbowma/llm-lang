@@ -17,6 +17,8 @@
  current-power-use
  current-carbon-use
  current-water-use
+ punquote
+ (rename-out [punquote unprompt])
  (rename-out
   [new-module-begin #%module-begin]
   [new-top-interaction #%top-interaction])
@@ -25,42 +27,58 @@
   #%module-begin
   #%top-interaction))
 
-(define (wrap-f e)
- (match e
-  [(? void?) e]
-  ["\n" (void)]
-  [_ (append-prompt! e)]))
+;; TODO
+;; Would be nice to use display for the result of a prompt, but print for other values.
+;; Could introduce a "display-string" and special case it?
+;; Using this for now, for backwards compatibility.
+(current-print (lambda (e) (if (void? e) (void) (displayln e))))
 
-(define-syntax (wrap stx)
+(define (pquote e)
+ (match e
+  ; some conveniences, for implicit unprompting irrelevant values.
+  ["" (void)]
+  ;["\n" (void)]
+  [(? void?) (void)]
+  [_ (append-prompt! (format "~a" e))]))
+
+(define-syntax (punquote stx)
+ (raise-syntax-error "Cannot use punquote outside pquasiquote"))
+
+(define-syntax (pquasiquote stx)
+ (syntax-parse stx
+  [(_ ((~literal punquote) e))
+   #`e]
+  [(_ e)
+   #`(pquote e)]
+  [(_ e e^ ...)
+   #`(begin (pquasiquote e) (pquasiquote e^) ...)]))
+
+(define-syntax (top-pquasiquote stx)
   (syntax-parse stx
     [(_ e)
+     ; hack to handle top-level stuff like `require`:
+     ; try to expand as expression, and avoid quasiquoting if it's not valid in expression context
      (with-handlers ([values (lambda _ #'e)])
-       (let-values ([(_ x) (syntax-local-expand-expression #'e)])
-         #`(wrap-f #,x)))]))
+       (let-values ([(_ x) (syntax-local-expand-expression #'(pquasiquote e))])
+         x))]))
 
 (define-syntax (new-module-begin stx)
   (syntax-parse stx
     [(_ e ...)
      #`(#%module-begin
-        ;; TODO: why is this not just wrap-f?
-        ;; doesn't work with require!
-        (wrap e) ...
-        (display (prompt!)))]))
+        (top-pquasiquote e) ...
+        (prompt!))]))
 
 (define-syntax (new-top-interaction stx)
   (syntax-parse stx
-    [(_ . e)
-     #`(begin (wrap-f e) (display (prompt!)))]))
+    [(_ e ...)
+     #`(values (pquasiquote e) ... (prompt!))]))
 
 (require scribble/reader)
-(define (wrap2 str)
- (match str
-  [(? void?) ""]
-  [_ (format "~a" str)]))
 
 (current-read-interaction
   (lambda (fo e)
     (syntax-case (read-syntax-inside fo e) ()
       [() eof]
-      [(str ...)
-       #'(string-append (wrap2 str) ...)])))
+      [(str ... newline)
+       #'(str ...)])))
