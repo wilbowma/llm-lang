@@ -28,7 +28,7 @@
   (append-prompt! str))
  (define prompt (string-trim (bytes->string/utf-8 (get-output-bytes (current-prompt-port) #t) #\uFFFD) #:repeat? #t))
  (if (equal? "" prompt)
-     ""
+     (void)
      ((current-send-prompt!) prompt (current-chat-history))))
 
 (define current-response-timeout
