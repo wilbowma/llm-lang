@@ -36,7 +36,7 @@ To run an llm-lang program, simply run it as a Racket program: `racket -t exampl
 The above examples will display some variation on the following:
 > Yes, I'm functioning properly. How can I assist you further? Whether it's answering questions or helping with tasks, I'm here to help!
 
-The return value of any top-level expression is added to the prompt, except the values `""`, `(void)`, and `"\n"`.
+The return value of any top-level expression is added to the prompt, except the values `""` and `(void)`, or any explicitly `unprompt`ed expression.
 Non-expressions, such as definitions, and statements do not add values to the prompt.
 The current prompt is sent sent at the next call to `prompt!`, which returns the response from the LLM.
 There is an implicit call to `prompt!` at the end of every module.
