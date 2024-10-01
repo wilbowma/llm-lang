@@ -42,7 +42,12 @@
   [_ (append-prompt! (format "~a" e))]))
 
 (define-syntax (punquote stx)
- (raise-syntax-error "Cannot use punquote outside pquasiquote"))
+ (syntax-parse stx
+  [(_ e)
+   ; hack to cooperate with the hack for require
+   (if (eq? (syntax-local-context) 'top-level)
+       #'e
+       (raise-syntax-error 'unprompt "Cannot use punquote outside pquasiquote"))]))
 
 (define-syntax (pquasiquote stx)
  (syntax-parse stx
@@ -58,9 +63,10 @@
     [(_ e)
      ; hack to handle top-level stuff like `require`:
      ; try to expand as expression, and avoid quasiquoting if it's not valid in expression context
-     (with-handlers ([values (lambda _ #'e)])
+     (with-handlers ([values (lambda (exn) (raise exn))])
+      (with-handlers ([values (lambda (exn) (local-expand #'e 'top-level '()))])
        (let-values ([(_ x) (syntax-local-expand-expression #'(pquasiquote e))])
-         x))]))
+         x)))]))
 
 (define-syntax (new-module-begin stx)
   (syntax-parse stx
