@@ -20,5 +20,6 @@
   (for/fold ([images '()])
             ([file (in-directory image-dir)]
              #:when (path-has-extension? file ".png"))
+    ; TODO: Prompts should be able to embed images directly, if the backend supports them?
     (gpt4-add-image! 'png (bytes->string/utf-8 (base64-encode (port->bytes (open-input-file file) #:close? #t) "")))
     (dict-set images (bitmap file) (prompt! "Please provide alt text for the following image."))))
