@@ -10,7 +10,7 @@
 
 (define current-send-prompt!
  (make-parameter
-  (lambda (e) (error "Unconfigured backend prompt sender; please require a backend. Failed to send prompt" e))))
+  (lambda (e) (error 'current-send-prompt! "Unconfigured backend prompt sender; please require a backend. Failed to send prompt: ~a~n" e))))
 
 ; expects list of hasheq with 'role either "user" or "assistant" and 'content with the prompt or response.
 ; in reverse chronological order
