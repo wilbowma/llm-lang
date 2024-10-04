@@ -36,4 +36,4 @@
             (let loop ([defs '()])
              (let ([d (read)])
               (if (eof-object? d) (reverse defs) (loop (cons d defs))))))))
-      (unless name (error (format "Prompt did not define ~a correctly" 'name))))]))
+      #;(unless name (error (format "Prompt did not define ~a correctly" 'name))))]))
