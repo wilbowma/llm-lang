@@ -68,10 +68,19 @@
        (let-values ([(_ x) (syntax-local-expand-expression #'(pquasiquote e))])
          x)))]))
 
+(require (prefix-in scrb: scribble/reader))
+
+(define scribble-like-read-interaction
+ (lambda (fo e)
+  (syntax-case (scrb:read-syntax-inside fo e) ()
+   [() eof]
+   [(str ... newline) #'(str ...)])))
+
 (define-syntax (new-module-begin stx)
   (syntax-parse stx
     [(_ e ...)
      #`(#%module-begin
+	(current-read-interaction scribble-like-read-interaction)
         (top-pquasiquote e) ...
         (prompt!))]))
 
@@ -79,12 +88,3 @@
   (syntax-parse stx
     [(_ e ...)
      #`(values (pquasiquote e) ... (prompt!))]))
-
-(require scribble/reader)
-
-(current-read-interaction
-  (lambda (fo e)
-    (syntax-case (read-syntax-inside fo e) ()
-      [() eof]
-      [(str ... newline)
-       #'(str ...)])))
